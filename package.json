@@ -1,0 +1,11 @@
+{
+  "name": "wine-cellar",
+  "description": "Wine Cellar Application",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "email-validator": "^1.0.1",
+    "express": "3.x",
+    "mongoose": "^3.8.25"
+  }
+}
