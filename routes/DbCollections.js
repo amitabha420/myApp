@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 
 var UsersSchema = new Schema({
  	"email": String,
+ 	"password" : String,
     "gender": String,
     "age": String,
     "profiletype": String,  //values => facebook/twitter/manual(default)

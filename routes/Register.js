@@ -96,8 +96,11 @@ exports.Register = function (req, res)
             }
             else
             {
+                var randomPassword = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
+                console.log(randomPassword);
                 var User = new UsersCollection({
                 "email": userobj.email,
+                "password" : randomPassword,
                 "gender": userobj.gender,
                 "age": userobj.age,
                 "profiletype": userobj.profiletype,
@@ -140,7 +143,7 @@ exports.Loggin = function (req, res) {
         
         function(callback) {
 
-            UsersCollection.findOne({email: userobj.email}, function(err,obj) 
+            UsersCollection.findOne({email: userobj.email,password : userobj.password}, function(err,obj) 
             {
                 if(err)
                 {
@@ -161,7 +164,7 @@ exports.Loggin = function (req, res) {
                     else
                     {
                         response.StatusCode = 404;
-                        response.Message = 'Invalid username and password';
+                        response.Message = 'Invalid loggin credential';
                     }
                 }
                 
