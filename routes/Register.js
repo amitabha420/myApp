@@ -13,11 +13,12 @@ exports.Register = function (req, res)
     var userobj = req.body;
 
     var StatusCode = 200;
+    var __id = '';
 
     //validations : 
     //201 : invalid email
     //202 : invalid phone no
-    //203 : user already exists
+    //203 : user already registered
     if(userobj.profiletype === 'manual')
     {
         //console.log('isNaN' + isNaN(userobj.email));
@@ -45,24 +46,29 @@ exports.Register = function (req, res)
         function(callback) {
             if(userobj.profiletype == 'manual')
             {
-                UsersCollection.find({email: userobj.email}, function(err,obj) 
+                UsersCollection.findOne({email: userobj.email}, function(err,obj) 
                 {
                     if (err) { StatusCode = 500; }
-                    if(obj.length != 0)
+                    if(obj != null)
+                    {
                         StatusCode = 203;
+                        __id = obj._id;
+                    }
                         //return callback(new Error('user exists.'));
                     callback();
                 })
             }
             else
             {
-                UsersCollection.find({token: userobj.token}, function(err,obj) 
+                UsersCollection.findOne({token: userobj.token}, function(err,obj) 
                 {
                     if (err) { StatusCode = 500; }
-                    if(obj.length != 0)
+                    if(obj != null)
+                    {
                         StatusCode = 203;
+                        __id = obj._id;
+                    }
                         //return callback(new Error('user exists.'));
-                    console.log(StatusCode);
                     callback();
                 })
             }
@@ -82,11 +88,11 @@ exports.Register = function (req, res)
             }
             else if(StatusCode == 203)
             {
-                res.send({"_id" : "", "StatusCode" : StatusCode , "Message" : "User already exists"});
+                res.send({"_id" : __id, "StatusCode" : StatusCode , "Message" : "user already registered"});
             }
             else if(StatusCode == 500)
             {
-                res.send({"_id" : "", "StatusCode" : StatusCode, "Message" : "User already exists"});
+                res.send({"_id" : "", "StatusCode" : StatusCode, "Message" : "Internal server error"});
             }
             else
             {
@@ -115,22 +121,58 @@ exports.Register = function (req, res)
 } 
 
 
-exports.SocialLoggin = function (req, res) {
-    
-    var userobj = req.body;
-    
-    UsersCollection.findOne({token: userobj.token}, function(err,obj) 
-        {
-          res.send(obj);
-        });
-}
-
 exports.Loggin = function (req, res) {
     
     var userobj = req.body;
     
-    UsersCollection.findOne({email: userobj.email}, function(err,obj) 
-        {
-          res.send(obj);
-        });
+    var response = {
+        StatusCode : 200,
+        Message : 'OK',
+        email : '',
+        gender : '',
+        age: '',
+        profiletype: 'manual',
+        token : '',
+        _id : ''
+    };
+
+    async.series([
+        
+        function(callback) {
+
+            UsersCollection.findOne({email: userobj.email}, function(err,obj) 
+            {
+                if(err)
+                {
+                    response.StatusCode = 500;
+                    response.Message = 'Internal server error';
+                }
+                else
+                {
+                    //console.log(JSON.stringify(obj));
+                    if(obj != null )
+                    {
+                        response.email = obj.email;
+                        response.gender = obj.gender;
+                        response.age = obj.age;
+                        response.profiletype = obj.profiletype;
+                        response._id = obj._id;
+                    }
+                    else
+                    {
+                        response.StatusCode = 404;
+                        response.Message = 'Invalid username and password';
+                    }
+                }
+                
+               callback();
+            })
+            
+        }, //1st function end
+
+        ], //end of function serize
+            function(err) { //This function gets called after the two tasks have called their "task callbacks"
+
+            res.send(response);
+        })
 }

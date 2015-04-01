@@ -13,7 +13,6 @@ app.configure(function () {
 
 app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
-app.post('/SocialLoggin',Register.SocialLoggin);
 app.use('/Loggin',Register.Loggin);
 
 app.post('/CreateChannel',Channel.Create);
