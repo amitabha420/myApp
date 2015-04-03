@@ -100,7 +100,7 @@ exports.Register = function (req, res)
                 console.log(randomPassword);
                 var User = new UsersCollection({
                 "email": userobj.email,
-                "password" : randomPassword,
+                "password" : userobj.password,
                 "gender": userobj.gender,
                 "age": userobj.age,
                 "profiletype": userobj.profiletype,
@@ -115,7 +115,7 @@ exports.Register = function (req, res)
                     }
                     else
                     {
-                        var responseObj = {"_id" : obj._id , "StatusCode" : "200", "Message" : "OK"};
+                        var responseObj = {"_id" : obj._id , "StatusCode" : "200", "Message" : "Congratulations! You have successfully registered with SyncSpot."};
                         res.send(responseObj);    
                     }
                 });
@@ -130,7 +130,7 @@ exports.Loggin = function (req, res) {
     
     var response = {
         StatusCode : 200,
-        Message : 'OK',
+        Message : 'You have logged in successfully.',
         email : '',
         gender : '',
         age: '',

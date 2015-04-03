@@ -1,7 +1,8 @@
 
 var express = require('express'),
     Register = require('./routes/Register');
-    Channel = require('./routes/Channel');
+    AdminUsers = require('./routes/AdminUsers');
+    Channels = require('./routes/Channels');
  //wineM = require('./routes/WineMongoos');
 var app = express();
  
@@ -15,18 +16,14 @@ app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
 app.use('/Loggin',Register.Loggin);
 
-app.post('/CreateChannel',Channel.Create);
-app.post('/EditChannel',Channel.Edit);
+app.post('/CreateAdminUsers',AdminUsers.Create);
 
-//app.get('/wines', wine.findAll);
-//app.get('/wines/:id', wine.findById);
-//app.post('/wines', wine.addWine);
-//app.put('/wines/:id', wine.updateWine);
-//app.delete('/wines/:id', wine.deleteWine);
- 
+app.post('/CreateChannel',Channels.Create);
+app.post('/EditChannel',Channels.Edit);
+app.post('/DeleteChannel',Channels.Delete);
+app.post('/SetDigitalcontents',Channels.UploadDigitalContent);
 
 app.listen(3000);
-//app.listen(process.env.PORT || 81);
 console.log('Listening on port 3000...');
 
 /*

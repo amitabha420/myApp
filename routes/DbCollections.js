@@ -15,9 +15,34 @@ var UsersSchema = new Schema({
 exports.UsersCollection = mongoose.model('Users', UsersSchema);
 
 
-var ChannelSchema = new Schema({
- 	"Name": String,
-    "Description": String
-},{ collection: 'Channels' });
+var AdminUsersSchema = new Schema({
+ 	"User": String,
+    "password": String,
+    "IsSuperAdmin" : Boolean,
+    "IsApp" :Boolean,
+    "AppName" : String,
+    "Channel" : 
+    			[
+    				{
+    					"ChannelName" : String,
+    					"ChannelDescription" : String,
+                        "BannerImageUrl" : String,
+                        "SubscribedUsers" : 
+                                            [
+                                               {
+                                                  "Uid" : String
+                                               }
+                                            ],
+				 		"GeoFencingData" : 
+                                            [
+                                                {
+                                                    "Loc" : { "Type" : String , "Coordinates" : []  },
+                                                    "Digitalcontents" : [],
+                                                    "LocationName" : String
+                                                }
+                                            ]
+    				}
+    			]
+},{ collection: 'AdminUsers' });
 
-exports.ChannelCollection = mongoose.model('Channels', ChannelSchema);
+exports.AdminUsersSchema = mongoose.model('AdminUsers', AdminUsersSchema);
