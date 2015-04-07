@@ -1,6 +1,12 @@
 var adminUsersSchema = require('./DbCollections.js').AdminUsersSchema;
 
 
+/* Input
+{
+  "User" : "amitabha",
+  "password" : "amitabha"
+}
+*/
 //need to add admin user user name validation.
 exports.Create = function(req,res)
 {

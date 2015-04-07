@@ -20,6 +20,11 @@ exports.Create = function(req,res)
     var Message = "";
     var AdminUserDbObject ;
 
+    if(!AdminUser.BannerImageUrl)
+        {
+            AdminUser.BannerImageUrl = "http://syncspot.net/wp-content/uploads/2014/12/SyncSpot-Logo-V2.png";
+        }
+
     //200 : OK
     //201 : Channel already exists for the user.
     //404 : Data is not valid.
@@ -243,10 +248,15 @@ exports.UploadDigitalContent = function(req,res)
     };
 
     var GeoFencingData = {
-                            "Loc" : { "Type" : "Polygon" , "Coordinates" : RequestData.Coordinates  },
-                            "Digitalcontents" : DigitalContents,
-                            "LocationName" : RequestData.LocationName
-                        }
+                            "Loc" : { type : {type : String} , coordinates : []  },
+                            "Digitalcontents" : [],
+                            "LocationName" : String
+                        };
+        GeoFencingData.Digitalcontents = DigitalContents;
+        GeoFencingData.LocationName = RequestData.LocationName;
+        GeoFencingData.Loc.type = "Polygon";
+        GeoFencingData.Loc.coordinates = [];
+        GeoFencingData.Loc.coordinates.push(RequestData.Coordinates);
 
 
     //200 : OK
@@ -260,7 +270,7 @@ exports.UploadDigitalContent = function(req,res)
 
             adminUsersSchema.findOne({ _id: RequestData._userid, "Channel.ChannelName": RequestData.ChannelName }, function(err,obj) 
             {
-                console.log(JSON.stringify(obj));
+                //console.log(JSON.stringify(obj));
                 if(err)
                 {
                     console.log(err);
@@ -325,6 +335,7 @@ exports.UploadDigitalContent = function(req,res)
                         var channelid = finalobj.Channel[channelcount - 1]._id;
                         StatusCode = 200;
                         Message = "OK";
+                        
                         res.send({"_id" : channelid, "StatusCode" : StatusCode ,"Message" : Message});
                         //res.send(AdminUserDbObject);
                     }

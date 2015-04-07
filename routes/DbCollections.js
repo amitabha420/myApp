@@ -36,7 +36,7 @@ var AdminUsersSchema = new Schema({
 				 		"GeoFencingData" : 
                                             [
                                                 {
-                                                    "Loc" : { "Type" : String , "Coordinates" : []  },
+                                                    "Loc" : { type : {type: String }, coordinates : []  },
                                                     "Digitalcontents" : [],
                                                     "LocationName" : String
                                                 }
@@ -45,4 +45,5 @@ var AdminUsersSchema = new Schema({
     			]
 },{ collection: 'AdminUsers' });
 
+AdminUsersSchema.index({ "Channel.GeoFencingData.Loc" : '2dsphere'});
 exports.AdminUsersSchema = mongoose.model('AdminUsers', AdminUsersSchema);
