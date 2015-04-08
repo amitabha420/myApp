@@ -36,7 +36,10 @@ exports.GeoLocations = function(req,res)
   var limit = parseInt(input.limit);
 	var coordinate = [lat,lng];
 
-	//console.log(coordinate);
+  console.log(parseFloat("5.265"));
+  console.log(lat + "," lng);
+
+	console.log(coordinate);
 
 	adminUsersSchema.aggregate(
                             [{ $match :{'Channel.GeoFencingData.Loc': 
