@@ -37,7 +37,7 @@ exports.GeoLocations = function(req,res)
 	var coordinate = [lat,lng];
 
   console.log(parseFloat("5.265"));
-  console.log(lat + "," lng);
+  console.log(lat + "," + lng);
 
 	console.log(coordinate);
 
