@@ -221,17 +221,31 @@ exports.Delete = function(req,res)
 
 /* Input Data
 {
-   "_userid": "551d0aa75e297dec2204bd58",
-   "ChannelName" : "channel1",     
-   "Coordinates" :[ [30.30532,72.6416],[28.99313,70.30151],[30.78517,70.44434]],
-  "Digitalcontents" : [ "http://storage.googleapis.com/0syncspotteam-bucket01/Kalimba.mp3",
-                        "http://storage.googleapis.com/0syncspotteam-bucket01/beautiful-nature-1411.jpg",
-                        "http://storage.googleapis.com/0syncspotteam-bucket01/Chrysanthemum.jpg",
-                        "http://storage.googleapis.com/0syncspotteam-bucket01/Hydrangeas.jpg",
-                        "http://storage.googleapis.com/0syncspotteam-bucket01/Desert.jpg"
+   "_userid": "552294dea496af1c215a7235",
+   "ChannelName" : "channel2",     
+   "Coordinates" :[[28.52542,79.87061],[27.84059,78.78845],[27.19052,77.53052],[29.01381,77.67334 ],[28.52542,79.87061]],
+  "Digitalcontents" : [ {
+                            "Url" : "http://storage.googleapis.com/0syncspotteam-bucket01/Kalimba.mp3",
+                            "Name" : "Example mp4",
+                            "Type" : "video"
+                        },
+                          {
+                            "Url" : "http://storage.googleapis.com/0syncspotteam-bucket01/Kalimba.mp3",
+                            "Name" : "Example mp4",
+                            "Type" : "image"
+                        },
+                                                 
+                           {
+                            "Url" : "http://storage.googleapis.com/0syncspotteam-bucket01/Kalimba.mp3",
+                            "Name" : "Example mp4",
+                            "Type" : "audio"
+                        }      
                       ],
    "LocationName" : "India"
 }
+
+
+
 */
 
 //same location name validation required for a channel
@@ -243,21 +257,31 @@ exports.UploadDigitalContent = function(req,res)
     var StatusCode = 200;
     var Message = "";
 
-    for (var i = 0 ; i < RequestData.Digitalcontents.length; i++) {
-         DigitalContents.push(RequestData.Digitalcontents[i]);
-    };
+    console.log(RequestData.Digitalcontents.length);
+    
+    
 
     var GeoFencingData = {
                             "Loc" : { type : {type : String} , coordinates : []  },
                             "Digitalcontents" : [],
                             "LocationName" : String
                         };
-        GeoFencingData.Digitalcontents = DigitalContents;
+        //GeoFencingData.Digitalcontents = DigitalContents;
+        for (var i = 0 ; i < RequestData.Digitalcontents.length; i++) 
+        {
+            var content = 
+            {
+                Url : RequestData.Digitalcontents[i].Url,
+                Name : RequestData.Digitalcontents[i].Name,
+                Type : RequestData.Digitalcontents[i].Type
+            };
+             GeoFencingData.Digitalcontents.push(content);
+        };
         GeoFencingData.LocationName = RequestData.LocationName;
         GeoFencingData.Loc.type = "Polygon";
         GeoFencingData.Loc.coordinates = [];
         GeoFencingData.Loc.coordinates.push(RequestData.Coordinates);
-
+        //res.send(GeoFencingData);
 
     //200 : OK
     //201 : Channel already exists for the user.
@@ -310,6 +334,7 @@ exports.UploadDigitalContent = function(req,res)
 
         ], //end of function serize
             function(err) { //This function gets called after the two tasks have called their "task callbacks"
+            //res.send(AdminUserDbObject);
             
             if(StatusCode == 500)
             {

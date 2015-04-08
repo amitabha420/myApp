@@ -5,6 +5,7 @@ var async = require('async');
 
 //This API is returning all the channels data from database. 
 //It will not be using in feature. Just do not delete for the query reference.
+//No input parameter required.
 exports.GetAllLocations = function(req,res)
 {
 	//var obj = adminUsersSchema.find({},{"Channel.GeoFencingData":1});
@@ -15,10 +16,6 @@ exports.GetAllLocations = function(req,res)
 											//console.log(JSON.stringify(result));
 											res.send(result);
 										});
-										
-	console.log('hi');
-	//console.log(JSON.stringify(obj));
-	//res.send();
 }
 
 
@@ -34,7 +31,10 @@ exports.GetAllLocations = function(req,res)
 exports.GeoLocations = function(req,res)
 {
 	var input = req.body;
-	var coordinate = [input.lat,input.lng];
+  var lat = parseFloat(input.lat);
+  var lng = parseFloat(input.lng);
+  var limit = parseInt(input.limit);
+	var coordinate = [lat,lng];
 
 	//console.log(coordinate);
 
@@ -58,10 +58,11 @@ exports.GeoLocations = function(req,res)
                                           "Channel._id" : 1,
                                           "Channel.BannerImageUrl" : 1,
                                           "Channel.GeoFencingData.LocationName"  : 1,
-                                          "Channel.GeoFencingData._id"  : 1 ,_id:0
+                                          "Channel.GeoFencingData._id"  : 1 ,
+                                           _id:0
                                     }
                             },
-                            { $limit : input.limit }
+                            { $limit : limit }
                     ],function(err,result)
                     {
                     	if(err)
@@ -92,7 +93,7 @@ exports.GetContents = function(req,res)
 	var channelid = new ObjectId(input.channelid);
 	var locationid = new ObjectId(input.locationid);
 
-  
+  console.log(channelid);
 
  
 adminUsersSchema.aggregate([
