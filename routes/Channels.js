@@ -182,6 +182,43 @@ exports.Delete = function(req,res)
     //500 : Internal server error.
 
     var AdminUser = req.body;
+
+    adminUsersSchema.findOne({ _id: AdminUser._userid, "Channel.ChannelName": AdminUser.ChannelName }, function(err,obj) 
+    {
+        var channelindex = -1;
+        for (var i = 0; i < obj.Channel.length ; i++) 
+        {
+            var channel = obj.Channel[i];
+            if(channel.ChannelName == AdminUser.ChannelName)    
+            {
+                channelindex = i;
+                break;
+            }
+        }
+        if(channelindex != -1)
+        {
+            obj.Channel.splice(channelindex,1);    
+
+            obj.save(function(error,result)
+            {
+                if(error)
+                {
+                    res.send({"StatusCode" : StatusCode ,"500" : "Internal server error"});
+                }
+                else
+                {
+                    res.send({"StatusCode" : "200" ,"Message" : "OK"});
+                }
+            });
+        }
+        else
+        {
+            res.send({"StatusCode" : "422" ,"Message" : "Unprocessable entity"});                            
+        }
+        
+    });
+}
+    /*
     console.log(AdminUser.ChannelName);
     adminUsersSchema.update( 
                                 { _id: AdminUser._userid }, 
@@ -215,7 +252,9 @@ exports.Delete = function(req,res)
                                 }    
                             }
                           });
-}
+    */
+
+
 
 
 
@@ -243,9 +282,6 @@ exports.Delete = function(req,res)
                       ],
    "LocationName" : "India"
 }
-
-
-
 */
 
 //same location name validation required for a channel
@@ -310,6 +346,19 @@ exports.UploadDigitalContent = function(req,res)
                         {
                             if (obj.Channel[i].ChannelName === RequestData.ChannelName)
                             {
+                                //Location name duplication checking
+                                //var locationexists = false;
+                                var dbfencingdata = obj.Channel[i].GeoFencingData;
+                                for(var j=0; j<dbfencingdata.length; j++)
+                                {
+                                    if(dbfencingdata[j].LocationName == GeoFencingData.LocationName)
+                                    {
+                                        //locationexists = true ;
+                                        StatusCode = 405;
+                                        Message = "Location already exists.";
+                                    }
+                                }
+
                                 if(obj.Channel[i].GeoFencingData.length == 0 ) 
                                     {
                                         obj.Channel[i].GeoFencingData = [];
@@ -344,6 +393,10 @@ exports.UploadDigitalContent = function(req,res)
             {
                 res.send({"_id" : "", "StatusCode" : StatusCode ,"Message" : Message});
             }
+            else if(StatusCode == 405)
+            {
+                res.send({"_id" : "", "StatusCode" : StatusCode ,"Message" : Message});
+            }
             else
             {
                 
@@ -367,4 +420,100 @@ exports.UploadDigitalContent = function(req,res)
                 });
             }
         })
+}
+
+
+//Edit digital contents of a channel
+exports.EditDigitalContents = function(req,res)
+{
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var channelid = new ObjectId(input.channelid);
+    var locationid = new ObjectId(input.locationid);
+    //var AdminUserDbObject;
+    var channelindex,fencingIndex ;
+    var fencingObj;
+    var flag = false;
+
+    //retrieve the channel user and update it.
+    //In our version I get Too many positional (i.e. '$') elements found in path  for update query which is get fixed in 3.1
+
+
+    adminUsersSchema.findOne({
+                    "Channel._id" : channelid
+                    ,"Channel.GeoFencingData._id" : locationid
+                    ,"Channel.GeoFencingData.Digitalcontents.Name" : input.Old.Name
+                    ,"Channel.GeoFencingData.Digitalcontents.Type" : input.Old.Type
+                    },function(err,result)
+                    {
+                        
+                        for (var i = 0; i < result.Channel.length ; i++) 
+                        {
+                            //console.log(JSON.stringify(result.Channel[i]));
+                            var channel = result.Channel[i];
+                            
+                            if(channel._id == input.channelid )    
+                            {
+                                
+                                for (var j = 0; j < channel.GeoFencingData.length; j++) 
+                                {
+
+                                    var fencing = channel.GeoFencingData[j];
+                                    if(fencing._id == input.locationid)
+                                    {
+                                        //console.log('geoin');
+                                        for (var k = 0; k < fencing.Digitalcontents.length; k++) 
+                                        {
+                                            var digitalcontent = fencing.Digitalcontents[k];
+                                            //console.log(input.Old.Type + "," + input.Old.Name + "," + input.Old.Url);
+                                            //console.log(digitalcontent.Type + "," + digitalcontent.Name + "," + digitalcontent.Url);
+                                            if(digitalcontent.Type.toLowerCase() == input.Old.Type.toLowerCase() && 
+                                                digitalcontent.Name.toLowerCase() == input.Old.Name.toLowerCase() &&
+                                                digitalcontent.Url.toLowerCase() == input.Old.Url.toLowerCase())
+                                            {
+
+                                                result.Channel[i].GeoFencingData[j].Digitalcontents[k].Type = input.New.Type;
+                                                result.Channel[i].GeoFencingData[j].Digitalcontents[k].Name = input.New.Name;
+                                                result.Channel[i].GeoFencingData[j].Digitalcontents[k].Url = input.New.Url;
+                                                channelindex = i;
+                                                fencingIndex = j;
+                                                fencingObj = result.Channel[i].GeoFencingData[j];
+                                                flag = true;
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //console.log(flag);
+                        if(flag)
+                        {
+                            result.Channel[channelindex].GeoFencingData.splice(fencingIndex,1);
+                            result.Channel[channelindex].GeoFencingData.push(fencingObj);    
+                            result.save(function(err,obj)
+                            {
+                                //console.log(err);
+                                //console.log(JSON.stringify(obj));
+                                if(err)
+                                {
+                                    res.send({"result" : "", "StatusCode" : StatusCode ,"500" : "Internal server error"});
+                                }
+                                else
+                                {
+                                    
+                                    res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});
+                                    //res.send(AdminUserDbObject);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            res.send({"result" : "", "StatusCode" : "422" ,"Message" : "Unprocessable entity"});
+                        }
+
+                        
+                        //res.send(result);
+                    });
+    
 }

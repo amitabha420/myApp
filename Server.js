@@ -22,11 +22,12 @@ app.post('/CreateChannel',Channels.Create);
 app.post('/EditChannel',Channels.Edit);
 app.post('/DeleteChannel',Channels.Delete);
 app.post('/SetDigitalcontents',Channels.UploadDigitalContent);
-
+app.post('/AlterDigitalcontents',Channels.EditDigitalContents);
 
 app.post('/GetAllLocations',LocationSearch.GetAllLocations); //Not using now, Just keeping for reference
 app.post('/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
 app.post('/DigitalContents/GetContents',LocationSearch.GetContents);
+
 
 app.listen(3000);
 console.log('Listening on port 3000...');

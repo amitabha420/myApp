@@ -94,11 +94,11 @@ exports.GetContents = function(req,res)
 	var input = req.body;
 	var ObjectId = require('mongoose').Types.ObjectId;
 	var channelid = new ObjectId(input.channelid);
-	var locationid = new ObjectId(input.locationid);
+	//var locationid = new ObjectId(input.locationid);
 
   console.log(channelid);
 
- 
+/* 
 adminUsersSchema.aggregate([
      { $unwind : "$Channel" },
      { $unwind : "$Channel.GeoFencingData" },
@@ -114,5 +114,20 @@ adminUsersSchema.aggregate([
               res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
             }
     });
-
+*/
+adminUsersSchema.aggregate([
+     { $unwind : "$Channel" },
+     { $unwind : "$Channel.GeoFencingData" },
+     { $match : { "Channel._id" : channelid }},
+     { $project : { "contents" : "$Channel.GeoFencingData.Digitalcontents", "Location" : "$Channel.GeoFencingData.LocationName", "_id" : 0}},
+    ],function(error,result){
+      if(error)
+            {
+              res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
+            }
+            else
+            {
+              res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
+            }
+    });
 }
