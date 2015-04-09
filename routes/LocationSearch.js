@@ -70,7 +70,7 @@ exports.GeoLocations = function(req,res)
                     {
                     	if(err)
                     	{
-                    		res.send({"result" : err, "StatusCode" : 500 ,"Message" : "Internal server error"});
+                    		res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
                     	}
                     	else
                     	{
