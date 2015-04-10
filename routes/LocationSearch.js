@@ -119,7 +119,12 @@ adminUsersSchema.aggregate([
      { $unwind : "$Channel" },
      { $unwind : "$Channel.GeoFencingData" },
      { $match : { "Channel._id" : channelid }},
-     { $project : { "contents" : "$Channel.GeoFencingData.Digitalcontents", "Location" : "$Channel.GeoFencingData.LocationName", "_id" : 0}},
+     { $project : { "contents" : "$Channel.GeoFencingData.Digitalcontents", 
+                    "Location" : "$Channel.GeoFencingData.LocationName",
+                    "BannerUrl" : "$Channel.BannerImageUrl",
+                     "_id" : 0
+                  }
+      },
     ],function(error,result){
       if(error)
             {

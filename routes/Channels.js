@@ -292,7 +292,7 @@ exports.UploadDigitalContent = function(req,res)
     var DigitalContents= [];
     var StatusCode = 200;
     var Message = "";
-
+    //console.log('hi');
     console.log(RequestData.Digitalcontents.length);
     
     
@@ -300,7 +300,8 @@ exports.UploadDigitalContent = function(req,res)
     var GeoFencingData = {
                             "Loc" : { type : {type : String} , coordinates : []  },
                             "Digitalcontents" : [],
-                            "LocationName" : String
+                            "LocationName" : String,
+                            "Notification" : String
                         };
         //GeoFencingData.Digitalcontents = DigitalContents;
         for (var i = 0 ; i < RequestData.Digitalcontents.length; i++) 
@@ -314,6 +315,7 @@ exports.UploadDigitalContent = function(req,res)
              GeoFencingData.Digitalcontents.push(content);
         };
         GeoFencingData.LocationName = RequestData.LocationName;
+        GeoFencingData.Notification = RequestData.Notification;
         GeoFencingData.Loc.type = "Polygon";
         GeoFencingData.Loc.coordinates = [];
         GeoFencingData.Loc.coordinates.push(RequestData.Coordinates);
@@ -323,7 +325,7 @@ exports.UploadDigitalContent = function(req,res)
     //201 : Channel already exists for the user.
     //404 : Data is not valid.
     //500 : Internal server error.
-
+    
     async.series([
         
         function(callback) {
@@ -364,6 +366,7 @@ exports.UploadDigitalContent = function(req,res)
                                         obj.Channel[i].GeoFencingData = [];
                                     }
                                 obj.Channel[i].GeoFencingData.push(GeoFencingData);
+                                console.log(obj);
                             }
                         }
                         
@@ -399,7 +402,7 @@ exports.UploadDigitalContent = function(req,res)
             }
             else
             {
-                
+                //res.send(JSON.stringify(AdminUserDbObject);
                 AdminUserDbObject.save(function(err,finalobj){
                     if(err)
                     {
