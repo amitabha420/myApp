@@ -1,5 +1,38 @@
 var adminUsersSchema = require('./DbCollections.js').AdminUsersSchema;
+var defaultConfig = require('../defaultConfig.json');
 var async = require('async');
+
+
+
+
+exports.GetChannels = function(req,res)
+{
+    var input = req.body;
+    
+    var ObjectId = require('mongoose').Types.ObjectId;
+    adminUsersSchema.findOne(
+        { _id : ObjectId(input._userid)}, 
+        {
+            "AppName" : 0,
+            "IsApp" : 0,
+            "IsSuperAdmin" : 0,
+            "password" : 0,
+            "User" : 0,
+            "Channel.GeoFencingData" : 0,
+            "Channel.SubscribedUsers" : 0
+        },function(err,result)
+        {
+            if(err)
+            {
+                res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
+            }
+            else
+            {
+                res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});             
+            }
+        });
+    
+}
 
 
 //Create channel
@@ -14,6 +47,7 @@ var async = require('async');
   }*/
 exports.Create = function(req,res)
 {
+
     var AdminUser = req.body;
 
     var StatusCode = 200;
@@ -22,7 +56,7 @@ exports.Create = function(req,res)
 
     if(!AdminUser.BannerImageUrl)
         {
-            AdminUser.BannerImageUrl = "http://syncspot.net/wp-content/uploads/2014/12/SyncSpot-Logo-V2.png";
+            AdminUser.BannerImageUrl = defaultConfig.channeldefaultbanner;
         }
 
     //200 : OK
@@ -93,12 +127,13 @@ exports.Create = function(req,res)
             }
             else
             {
-                AdminUserDbObject.Channel.push(
-                                {
-                                    "ChannelName" : AdminUser.ChannelName,
+                var newchannel = {
+                    "ChannelName" : AdminUser.ChannelName,
                                     "ChannelDescription" : AdminUser.ChannelDescription,
-                                    "BannerImageUrl" : AdminUser.BannerImageUrl
-                                });
+                                    "BannerImageUrl" : AdminUser.BannerImageUrl,
+                };
+                AdminUserDbObject.Channel.push(newchannel);
+                       // res.send(AdminUserDbObject.Channel[2]);
                         AdminUserDbObject.save(function(err,finalobj){
                             if(err)
                             {
@@ -142,7 +177,8 @@ exports.Edit = function(req,res){
                                 { _id: AdminUser._userid, "Channel.ChannelName": AdminUser.ChannelName },
                                        { $set: { 
                                                 "Channel.$.ChannelDescription" : AdminUser.ChannelDescription ,
-                                                "Channel.$.BannerImageUrl" : AdminUser.BannerImageUrl 
+                                                "Channel.$.BannerImageUrl" : AdminUser.BannerImageUrl,
+                                                "Channel.$.ModifiedDate" : new Date(),
                                                } 
                                 }
                             ).exec(function(err,obj)
@@ -293,24 +329,31 @@ exports.UploadDigitalContent = function(req,res)
     var StatusCode = 200;
     var Message = "";
     //console.log('hi');
-    console.log(RequestData.Digitalcontents.length);
-    
-    
 
     var GeoFencingData = {
                             "Loc" : { type : {type : String} , coordinates : []  },
                             "Digitalcontents" : [],
                             "LocationName" : String,
-                            "Notification" : String
+                            "Notification" : String,
                         };
         //GeoFencingData.Digitalcontents = DigitalContents;
         for (var i = 0 ; i < RequestData.Digitalcontents.length; i++) 
         {
+            var imageurl = defaultConfig.contentdefaultbanner ;
+            var startTime = parseFloat(RequestData.Digitalcontents[i].StartingTime).toFixed(2);
+            var endTime = parseFloat(RequestData.Digitalcontents[i].EndingTime).toFixed(2);
+            if(RequestData.Digitalcontents[i].ImageUrl)
+            {
+                imageurl = RequestData.Digitalcontents[i].ImageUrl;
+            }
             var content = 
             {
                 Url : RequestData.Digitalcontents[i].Url,
                 Name : RequestData.Digitalcontents[i].Name,
-                Type : RequestData.Digitalcontents[i].Type
+                Type : RequestData.Digitalcontents[i].Type,
+                ImageUrl : imageurl,
+                StartingTime : startTime,
+                EndingTime : endTime,
             };
              GeoFencingData.Digitalcontents.push(content);
         };
@@ -366,7 +409,7 @@ exports.UploadDigitalContent = function(req,res)
                                         obj.Channel[i].GeoFencingData = [];
                                     }
                                 obj.Channel[i].GeoFencingData.push(GeoFencingData);
-                                console.log(obj);
+                                //console.log(JSON.stringify(obj));
                             }
                         }
                         
@@ -402,7 +445,7 @@ exports.UploadDigitalContent = function(req,res)
             }
             else
             {
-                //res.send(JSON.stringify(AdminUserDbObject);
+                //res.send(AdminUserDbObject);
                 AdminUserDbObject.save(function(err,finalobj){
                     if(err)
                     {

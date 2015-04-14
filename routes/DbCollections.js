@@ -21,12 +21,16 @@ var AdminUsersSchema = new Schema({
     "IsSuperAdmin" : Boolean,
     "IsApp" :Boolean,
     "AppName" : String,
+    //"CreateDate" : {type: Date, default: Date.now},
+    //"ModifiedDate" : {type : Date, default : Date.now},
     "Channel" : 
     			[
     				{
     					"ChannelName" : String,
     					"ChannelDescription" : String,
                         "BannerImageUrl" : String,
+                        "CreateDate" : {type: Date, default: Date.now},
+                        "ModifiedDate" : {type : Date, default : Date.now},        
                         "SubscribedUsers" : 
                                             [
                                                {
@@ -38,7 +42,8 @@ var AdminUsersSchema = new Schema({
                                                 {
                                                     "Loc" : { type : {type: String }, coordinates : []  },
                                                     "Digitalcontents" : [],
-                                                    "LocationName" : String
+                                                    "LocationName" : String,
+                                                    "Notification" : String,
                                                 }
                                             ]
     				}
@@ -47,3 +52,13 @@ var AdminUsersSchema = new Schema({
 
 AdminUsersSchema.index({ "Channel.GeoFencingData.Loc" : '2dsphere'});
 exports.AdminUsersSchema = mongoose.model('AdminUsers', AdminUsersSchema);
+
+
+
+var UserSavedContentsSchema = new Schema({
+    userid : String,
+    locationid : String,
+    contenturl :  String,
+    Content : []
+},{ collection : 'UserSavedContents'});
+exports.UserSavedContentsSchema = mongoose.model('UserSavedContents',UserSavedContentsSchema);

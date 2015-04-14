@@ -4,6 +4,7 @@ var express = require('express'),
     AdminUsers = require('./routes/AdminUsers');
     Channels = require('./routes/Channels');
     LocationSearch = require('./routes/LocationSearch');
+    SaveChannelContents = require('./routes/SaveChannelContents');
 var app = express();
  
 app.configure(function () {
@@ -18,6 +19,7 @@ app.use('/Loggin',Register.Loggin);
 
 app.post('/CreateAdminUsers',AdminUsers.Create);
 
+app.post('/GetChannels',Channels.GetChannels);
 app.post('/CreateChannel',Channels.Create);
 app.post('/EditChannel',Channels.Edit);
 app.post('/DeleteChannel',Channels.Delete);
@@ -29,6 +31,16 @@ app.post('/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
 app.post('/DigitalContents/GetContents',LocationSearch.GetContents);
 
 
+app.post('/User/SaveContent',SaveChannelContents.SAVEChannelContent4User);
+app.post('/User/GetContent',SaveChannelContents.GetChannelContent4User);
+
+//app.get('/testConfig',LocationSearch.testConfig);
+/*app.get('/testConfig',function(req,res)
+  {
+    var s = require('./defaultConfig.json');
+    res.send(s.channeldefaultbanner);
+    //res.send('ok');
+  });*/
 app.listen(3000);
 console.log('Listening on port 3000...');
 

@@ -1,5 +1,6 @@
 var adminUsersSchema = require('./DbCollections.js').AdminUsersSchema;
 var async = require('async');
+//var defaultConfig = require('../defaultConfig.json');
 //var mongoose = require('mongoose');
 
 
@@ -121,6 +122,7 @@ adminUsersSchema.aggregate([
      { $match : { "Channel._id" : channelid }},
      { $project : { "contents" : "$Channel.GeoFencingData.Digitalcontents", 
                     "Location" : "$Channel.GeoFencingData.LocationName",
+                    "LocationId" : "$Channel.GeoFencingData._id",
                     "BannerUrl" : "$Channel.BannerImageUrl",
                      "_id" : 0
                   }
