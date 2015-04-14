@@ -27,12 +27,12 @@ exports.SAVEChannelContent4User = function(req,res)
 			    		if(err)
 			    			res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
 			    		else
-			    			res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});             
+			    			res.send({"StatusCode" : "200" ,"Message" : "OK"});             
 			    	});	
     			}
     			else
     			{
-					res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});             
+					res.send({"StatusCode" : "200" ,"Message" : "OK"});             
     			}
     		}
     			//res.send('OK');
