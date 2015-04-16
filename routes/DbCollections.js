@@ -61,3 +61,5 @@ var UserSavedContentsSchema = new Schema({
     Content : []
 },{ collection : 'UserSavedContents'});
 exports.UserSavedContentsSchema = mongoose.model('UserSavedContents',UserSavedContentsSchema);
+
+

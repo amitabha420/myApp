@@ -125,6 +125,7 @@ adminUsersSchema.aggregate([
      { $project : { "contents" : "$Channel.GeoFencingData.Digitalcontents", 
                     "Location" : "$Channel.GeoFencingData.LocationName",
                     "LocationId" : "$Channel.GeoFencingData._id",
+                    "CentralCoordinate" : "$Channel.GeoFencingData.CentralCoordinate",
                     "BannerUrl" : "$Channel.BannerImageUrl",
                      "_id" : 0
                   }
