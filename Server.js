@@ -23,6 +23,7 @@ app.post('/GetChannels',Channels.GetChannels);
 app.post('/CreateChannel',Channels.Create);
 app.post('/EditChannel',Channels.Edit);
 app.post('/DeleteChannel',Channels.Delete);
+app.post('/DeleteGeoFenceDataForChannel',Channels.DeleteGeoFenceDataForChannel);  //not mensioned by client
 app.post('/SetDigitalcontents',Channels.UploadDigitalContent);
 app.post('/AlterDigitalcontents',Channels.EditDigitalContents);
 

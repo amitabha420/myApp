@@ -254,6 +254,56 @@ exports.Delete = function(req,res)
         
     });
 }
+
+/*
+{
+        "_userid": "551d0aa75e297dec2204bd58",
+        "ChannelName" : "channel1"
+    }
+*/
+exports.DeleteGeoFenceDataForChannel = function(req,res)
+{
+    //200 : OK
+    //404 : Data is not valid.
+    //500 : Internal server error.
+
+    var AdminUser = req.body;
+
+    adminUsersSchema.findOne({ _id: AdminUser._userid, "Channel.ChannelName": AdminUser.ChannelName }, function(err,obj) 
+    {
+        var channelindex = -1;
+        for (var i = 0; i < obj.Channel.length ; i++) 
+        {
+            var channel = obj.Channel[i];
+            if(channel.ChannelName == AdminUser.ChannelName)    
+            {
+                channelindex = i;
+                break;
+            }
+        }
+        if(channelindex != -1)
+        {
+            obj.Channel[channelindex].GeoFencingData = [];
+
+            obj.save(function(error,result)
+            {
+                if(error)
+                {
+                    res.send({"StatusCode" : StatusCode ,"500" : "Internal server error"});
+                }
+                else
+                {
+                    res.send({"StatusCode" : "200" ,"Message" : "OK"});
+                }
+            });
+        }
+        else
+        {
+            res.send({"StatusCode" : "422" ,"Message" : "Unprocessable entity"});                            
+        }
+        
+    });
+}
     /*
     console.log(AdminUser.ChannelName);
     adminUsersSchema.update( 
