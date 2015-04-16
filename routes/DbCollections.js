@@ -21,8 +21,6 @@ var AdminUsersSchema = new Schema({
     "IsSuperAdmin" : Boolean,
     "IsApp" :Boolean,
     "AppName" : String,
-    //"CreateDate" : {type: Date, default: Date.now},
-    //"ModifiedDate" : {type : Date, default : Date.now},
     "Channel" : 
     			[
     				{
@@ -41,6 +39,7 @@ var AdminUsersSchema = new Schema({
                                             [
                                                 {
                                                     "Loc" : { type : {type: String }, coordinates : []  },
+                                                    "CentralCoordinate":[],
                                                     "Digitalcontents" : [],
                                                     "LocationName" : String,
                                                     "Notification" : String,

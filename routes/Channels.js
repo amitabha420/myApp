@@ -320,7 +320,8 @@ exports.Delete = function(req,res)
 }
 */
 
-//same location name validation required for a channel
+//same location name validation is done for a channel
+//This function will create a GeoLocation of a channel and also Insert Digital Content to it.
 exports.UploadDigitalContent = function(req,res)
 {
     var RequestData = req.body;
@@ -358,6 +359,8 @@ exports.UploadDigitalContent = function(req,res)
              GeoFencingData.Digitalcontents.push(content);
         };
         GeoFencingData.LocationName = RequestData.LocationName;
+        GeoFencingData.CentralCoordinate = [];
+        GeoFencingData.CentralCoordinate.push(RequestData.CentralCoordinate);
         GeoFencingData.Notification = RequestData.Notification;
         GeoFencingData.Loc.type = "Polygon";
         GeoFencingData.Loc.coordinates = [];
@@ -469,7 +472,7 @@ exports.UploadDigitalContent = function(req,res)
 }
 
 
-//Edit digital contents of a channel
+//Edit only a existing digital content of a geolocation of a channel
 exports.EditDigitalContents = function(req,res)
 {
     var input = req.body;
@@ -521,6 +524,9 @@ exports.EditDigitalContents = function(req,res)
                                                 result.Channel[i].GeoFencingData[j].Digitalcontents[k].Type = input.New.Type;
                                                 result.Channel[i].GeoFencingData[j].Digitalcontents[k].Name = input.New.Name;
                                                 result.Channel[i].GeoFencingData[j].Digitalcontents[k].Url = input.New.Url;
+                                                result.Channel[i].GeoFencingData[j].Digitalcontents[k].ImageUrl = input.New.Imageurl;
+                                                result.Channel[i].GeoFencingData[j].Digitalcontents[k].StartingTime = input.New.StartingTime,
+                                                result.Channel[i].GeoFencingData[j].Digitalcontents[k].EndingTime = input.New.EndingTime,
                                                 channelindex = i;
                                                 fencingIndex = j;
                                                 fencingObj = result.Channel[i].GeoFencingData[j];
