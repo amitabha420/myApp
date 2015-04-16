@@ -62,6 +62,8 @@ exports.GeoLocations = function(req,res)
                                           "Channel._id" : 1,
                                           "Channel.BannerImageUrl" : 1,
                                           "Channel.GeoFencingData.LocationName"  : 1,
+                                          "Channel.GeoFencingData.Notification"  : 1,
+                                          "Channel.GeoFencingData.CentralCoordinate"  : 1,
                                           "Channel.GeoFencingData._id"  : 1 ,
                                            _id:0
                                     }
