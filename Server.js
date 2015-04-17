@@ -13,7 +13,7 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
  
-
+ 
 app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
 app.use('/Loggin',Register.Loggin);
