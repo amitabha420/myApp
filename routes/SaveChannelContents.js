@@ -8,6 +8,9 @@ exports.SAVEChannelContent4User = function(req,res)
     contentobj.userid = input.userid;
     contentobj.locationid= input.locationid;
     contentobj.contenturl = input.contenturl;
+    contentobj.locationName = input.locationName;
+    contentobj.lat = input.lat;
+    contentobj.lng = input.lng;
     contentobj.Content = [];
     contentobj.Content.push(input.Content);
 
@@ -39,15 +42,19 @@ exports.SAVEChannelContent4User = function(req,res)
     	});
 }
 
+
 exports.GetChannelContent4User = function(req,res)
 {
     var input = req.body;
 
+
     UserSavedContentsSchema.aggregate([
      { $match : { userid : input.userid }},
-     { $project : { "contents" : "$Content"}
-      },
-    ],function(error,result){
+     { $group : {_id :{lat : "$lat", lng : "$lng", locationName : "$locationName" ,locationid : "$locationid" },
+                 "Content" : {"$push" :"$Content"}}},
+     { $project : {Content : "$Content",lat:"$_id.lat",lan:"$_id.lng",locationName:"$_id.locationName",locationid:"$_id.locationid",_id:0}},
+   
+      ],function(error,result){
       if(error)
             {
               res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});

@@ -5,6 +5,7 @@ var express = require('express'),
     Channels = require('./routes/Channels');
     LocationSearch = require('./routes/LocationSearch');
     SaveChannelContents = require('./routes/SaveChannelContents');
+    Statistics = require('./routes/Statistics');
 var app = express();
  
 app.configure(function () {
@@ -34,6 +35,9 @@ app.post('/DigitalContents/GetContents',LocationSearch.GetContents);
 
 app.post('/User/SaveContent',SaveChannelContents.SAVEChannelContent4User);
 app.post('/User/GetContent',SaveChannelContents.GetChannelContent4User);
+
+
+app.post('/Statistics/WriteAccess',Statistics.EnlistContentAccess);
 
 //app.get('/testConfig',LocationSearch.testConfig);
 /*app.get('/testConfig',function(req,res)

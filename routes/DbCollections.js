@@ -57,9 +57,22 @@ exports.AdminUsersSchema = mongoose.model('AdminUsers', AdminUsersSchema);
 var UserSavedContentsSchema = new Schema({
     userid : String,
     locationid : String,
+    locationName : String,
+    lat : String,
+    lng : String,
     contenturl :  String,
     Content : []
 },{ collection : 'UserSavedContents'});
 exports.UserSavedContentsSchema = mongoose.model('UserSavedContents',UserSavedContentsSchema);
 
 
+var StatContentAccessSchema = new Schema({
+    userid : String,
+    channeladminid :String,
+    locationid : String,
+    contenturl : String,
+    contentName : String,
+    CreateDate : {type: Date, default: Date.now}
+},{collection : 'StatContentAccess'});
+
+exports.StatContentAccessSchema = mongoose.model('StatContentAccess', StatContentAccessSchema);

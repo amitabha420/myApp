@@ -57,6 +57,7 @@ exports.GeoLocations = function(req,res)
                             { 
                                 $project: 
                                     { 
+
                                           "Channel.GeoFencingData.Loc.coordinates" : 1,
                                           "Channel.ChannelName" : 1,
                                           "Channel._id" : 1,
@@ -65,7 +66,8 @@ exports.GeoLocations = function(req,res)
                                           "Channel.GeoFencingData.Notification"  : 1,
                                           "Channel.GeoFencingData.CentralCoordinate"  : 1,
                                           "Channel.GeoFencingData._id"  : 1 ,
-                                           _id:0
+                                          _id : 1
+                                          //"id": "$_id"
                                     }
                             },
                             { $limit : limit }
