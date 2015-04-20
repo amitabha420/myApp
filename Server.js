@@ -43,7 +43,7 @@ app.post('/Statistics/GetUserContentAccessFrequencyDetails', Statistics.GetUserC
 
 app.post('/Statistics/SetUserInSyncSpot', Statistics.SetUserInSyncSpot);
 app.post('/Statistics/SetUserOutSyncSpot',Statistics.SetUserOutSyncSpot);
-app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotStatisticsBetweenDate);
+//app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotStatisticsBetweenDate);
 
 
 //app.get('/testConfig',LocationSearch.testConfig);
