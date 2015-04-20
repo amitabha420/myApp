@@ -48,7 +48,7 @@ exports.GeoLocations = function(req,res)
                                                 $geoNear : 
                                                 {
                                                     $geometry: {"type": "Point", coordinates: coordinate},
-                                                    $maxDistance: 100 / 6378137, 
+                                                    $maxDistance: 10000 / 6378137, 
                                                     distanceMultiplier: 6378137
                                                  }
                                             }
