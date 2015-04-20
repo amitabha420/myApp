@@ -53,7 +53,7 @@ AdminUsersSchema.index({ "Channel.GeoFencingData.Loc" : '2dsphere'});
 exports.AdminUsersSchema = mongoose.model('AdminUsers', AdminUsersSchema);
 
 
-
+//UserSavedContents collection for user/SaveContent and user/getContent API
 var UserSavedContentsSchema = new Schema({
     userid : String,
     locationid : String,
@@ -70,6 +70,7 @@ var UserSavedContentsSchema = new Schema({
 exports.UserSavedContentsSchema = mongoose.model('UserSavedContents',UserSavedContentsSchema);
 
 
+//StatContentAccess collection, Here we are saving the contents access statistics by user
 var StatContentAccessSchema = new Schema({
     userid : String,
     channeladminid :String,
@@ -80,3 +81,16 @@ var StatContentAccessSchema = new Schema({
 },{collection : 'StatContentAccess'});
 
 exports.StatContentAccessSchema = mongoose.model('StatContentAccess', StatContentAccessSchema);
+
+//StatSyncSpot collection, here we are saving the user syncspot statistics, means when a user enter in a syncspot, how many time the user is in the spot and when the user leaves from the spot
+var StatSyncSpotSchema = new Schema({
+    SyncSpotInTime : {type: Date, default: Date.now},
+    UserId : String,
+    UserName : String,
+    SyncSpotId : String, //LocationId
+    SyncSpotName : String, //LocationName
+    ChannelId : String,
+    ChannelName : String,
+    SyncSpotOutTime : {type: Date}
+},{collection : 'StatSyncSpot'});
+exports.StatSyncSpotSchema = mongoose.model('StatSyncSpot', StatSyncSpotSchema);

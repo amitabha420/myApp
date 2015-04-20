@@ -41,6 +41,10 @@ app.post('/Statistics/WriteAccess',Statistics.EnlistContentAccess);
 app.post('/Statistics/GetContentAccessFrequencyByeDays', Statistics.GetContentAccessFrequencyByeDays);
 app.post('/Statistics/GetUserContentAccessFrequencyDetails', Statistics.GetUserContentAccessFrequencyDetails);
 
+app.post('/Statistics/SetUserInSyncSpot', Statistics.SetUserInSyncSpot);
+app.post('/Statistics/SetUserOutSyncSpot',Statistics.SetUserOutSyncSpot);
+app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotStatisticsBetweenDate);
+
 
 //app.get('/testConfig',LocationSearch.testConfig);
 /*app.get('/testConfig',function(req,res)

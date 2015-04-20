@@ -3,6 +3,7 @@
   "description": "Wine Cellar Application",
   "version": "0.0.1",
   "private": true,
+ 
   "dependencies": {
     "async": "^0.9.0",
     "email-validator": "^1.0.1",
