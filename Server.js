@@ -38,6 +38,9 @@ app.post('/User/GetContent',SaveChannelContents.GetChannelContent4User);
 
 
 app.post('/Statistics/WriteAccess',Statistics.EnlistContentAccess);
+app.post('/Statistics/GetContentAccessFrequencyByeDays', Statistics.GetContentAccessFrequencyByeDays);
+app.post('/Statistics/GetUserContentAccessFrequencyDetails', Statistics.GetUserContentAccessFrequencyDetails);
+
 
 //app.get('/testConfig',LocationSearch.testConfig);
 /*app.get('/testConfig',function(req,res)

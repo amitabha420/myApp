@@ -4,6 +4,8 @@ exports.SAVEChannelContent4User = function(req,res)
 {
     var input = req.body;
 
+    
+
     var contentobj = new UserSavedContentsSchema();
     contentobj.userid = input.userid;
     contentobj.locationid= input.locationid;
@@ -11,9 +13,15 @@ exports.SAVEChannelContent4User = function(req,res)
     contentobj.locationName = input.locationName;
     contentobj.lat = input.lat;
     contentobj.lng = input.lng;
-    contentobj.Content = [];
-    contentobj.Content.push(input.Content);
+    contentobj.EndingTime = input.EndingTime;
+    contentobj.StartingTime = input.StartingTime;
+    contentobj.ImageUrl = input.ImageUrl;
+    contentobj.Type = input.Type;
+    contentobj.Name = input.Name;
 
+    //var target1 = "http:\/\/storage.googleapis.com\/0syncspotteam-bucket01\/Vdieo_635605735016179351.mp4";
+    //var target = target1.replace('s', '');
+    //console.log(contentobj.contenturl);
     //res.send(contentobj);
     
 
@@ -47,14 +55,32 @@ exports.GetChannelContent4User = function(req,res)
 {
     var input = req.body;
 
-
     UserSavedContentsSchema.aggregate([
      { $match : { userid : input.userid }},
      { $group : {_id :{lat : "$lat", lng : "$lng", locationName : "$locationName" ,locationid : "$locationid" },
-                 "Content" : {"$push" :"$Content"}}},
-     { $project : {Content : "$Content",lat:"$_id.lat",lan:"$_id.lng",locationName:"$_id.locationName",locationid:"$_id.locationid",_id:0}},
+                    "content" : {"$push" : 
+                                    {
+                                        "contenturl" : "$contenturl",
+                                        "Type" : "$Type",
+                                        "StartingTime" : "$StartingTime",
+                                        "EndingTime" : "$EndingTime",
+                                        "ImageUrl" :  "$ImageUrl",
+                                        "Name" : "$Name"
+                                    }
+                                }
+                    }},
+    { $project : 
+        {
+            Content : "$content",
+            lat:"$_id.lat",
+            lan:"$_id.lng",
+            locationName:"$_id.locationName",
+            locationid:"$_id.locationid",
+            _id:0
+        }
+    },
    
-      ],function(error,result){
+  ],function(error,result){
       if(error)
             {
               res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});

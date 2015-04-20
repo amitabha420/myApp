@@ -61,7 +61,11 @@ var UserSavedContentsSchema = new Schema({
     lat : String,
     lng : String,
     contenturl :  String,
-    Content : []
+    EndingTime : String,
+    StartingTime : String,
+    ImageUrl : String,
+    Type : String,
+    Name :String
 },{ collection : 'UserSavedContents'});
 exports.UserSavedContentsSchema = mongoose.model('UserSavedContents',UserSavedContentsSchema);
 
