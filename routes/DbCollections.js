@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/SyncSpot');
+//mongoose.connect('mongodb://localhost/SyncSpot');
+
+exports.mongoose = mongoose.connect('mongodb://localhost/SyncSpot');
 
 var Schema = mongoose.Schema;
 
@@ -94,3 +96,5 @@ var StatSyncSpotSchema = new Schema({
     SyncSpotOutTime : {type: Date}
 },{collection : 'StatSyncSpot'});
 exports.StatSyncSpotSchema = mongoose.model('StatSyncSpot', StatSyncSpotSchema);
+
+

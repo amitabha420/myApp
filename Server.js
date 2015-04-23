@@ -43,7 +43,11 @@ app.post('/Statistics/GetUserContentAccessFrequencyDetails', Statistics.GetUserC
 
 app.post('/Statistics/SetUserInSyncSpot', Statistics.SetUserInSyncSpot);
 app.post('/Statistics/SetUserOutSyncSpot',Statistics.SetUserOutSyncSpot);
-//app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotStatisticsBetweenDate);
+app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotStatisticsBetweenDate);
+
+//app.get('/Statistics/callstoredFunction', Statistics.callstoredFunction);
+app.post('/Statistics/lockContent', Statistics.lockContent);
+
 
 
 //app.get('/testConfig',LocationSearch.testConfig);

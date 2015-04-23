@@ -53,6 +53,8 @@ exports.Create = function(req,res)
     var StatusCode = 200;
     var Message = "";
     var AdminUserDbObject ;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid = new ObjectId(AdminUser._userid);
 
     if(!AdminUser.BannerImageUrl)
         {
@@ -68,7 +70,7 @@ exports.Create = function(req,res)
         
         function(callback) {
 
-            adminUsersSchema.findOne({ _id: AdminUser._userid }, function(err,obj) 
+            adminUsersSchema.findOne({ _id: _userid }, function(err,obj) 
             {
                 //console.log(JSON.stringify(obj));
                 if(err)
@@ -173,8 +175,11 @@ exports.Edit = function(req,res){
     //500 : Internal server error.
 
     var AdminUser = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid = new ObjectId(AdminUser._userid);
+
     adminUsersSchema.update(
-                                { _id: AdminUser._userid, "Channel.ChannelName": AdminUser.ChannelName },
+                                { _id: _userid, "Channel.ChannelName": AdminUser.ChannelName },
                                        { $set: { 
                                                 "Channel.$.ChannelDescription" : AdminUser.ChannelDescription ,
                                                 "Channel.$.BannerImageUrl" : AdminUser.BannerImageUrl,
@@ -218,8 +223,10 @@ exports.Delete = function(req,res)
     //500 : Internal server error.
 
     var AdminUser = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid = new ObjectId(AdminUser._userid);
 
-    adminUsersSchema.findOne({ _id: AdminUser._userid, "Channel.ChannelName": AdminUser.ChannelName }, function(err,obj) 
+    adminUsersSchema.findOne({ _id: _userid, "Channel.ChannelName": AdminUser.ChannelName }, function(err,obj) 
     {
         var channelindex = -1;
         for (var i = 0; i < obj.Channel.length ; i++) 
@@ -268,8 +275,10 @@ exports.DeleteGeoFenceDataForChannel = function(req,res)
     //500 : Internal server error.
 
     var AdminUser = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid = new ObjectId(AdminUser._userid);
 
-    adminUsersSchema.findOne({ _id: AdminUser._userid, "Channel.ChannelName": AdminUser.ChannelName }, function(err,obj) 
+    adminUsersSchema.findOne({ _id: _userid, "Channel.ChannelName": AdminUser.ChannelName }, function(err,obj) 
     {
         var channelindex = -1;
         for (var i = 0; i < obj.Channel.length ; i++) 
@@ -346,27 +355,59 @@ exports.DeleteGeoFenceDataForChannel = function(req,res)
 
 /* Input Data
 {
-   "_userid": "552294dea496af1c215a7235",
-   "ChannelName" : "channel2",     
-   "Coordinates" :[[28.52542,79.87061],[27.84059,78.78845],[27.19052,77.53052],[29.01381,77.67334 ],[28.52542,79.87061]],
-  "Digitalcontents" : [ {
-                            "Url" : "http://storage.googleapis.com/0syncspotteam-bucket01/Kalimba.mp3",
-                            "Name" : "Example mp4",
-                            "Type" : "video"
-                        },
-                          {
-                            "Url" : "http://storage.googleapis.com/0syncspotteam-bucket01/Kalimba.mp3",
-                            "Name" : "Example mp4",
-                            "Type" : "image"
-                        },
-                                                 
-                           {
-                            "Url" : "http://storage.googleapis.com/0syncspotteam-bucket01/Kalimba.mp3",
-                            "Name" : "Example mp4",
-                            "Type" : "audio"
-                        }      
-                      ],
-   "LocationName" : "India"
+    "_userid": "5534fea77dedf89f0a2a5017",
+    "ChannelName": "HBO",
+    "CentralCoordinate" : [88.42984020709991,22.568980095843376 ],
+    "Coordinates": [
+            [
+              88.42984020709991,
+              22.568980095843376
+            ],
+            [
+              88.43088090419769,
+              22.569217868482212
+            ],
+            [
+              88.43097746372223,
+              22.568890930998084
+            ],
+            [
+              88.43067705631256,
+              22.568563992738593
+            ],
+            [
+              88.43004941940308,
+              22.568593714430587
+            ],
+            [
+              88.42975437641144,
+              22.568796812487697
+            ],
+            [
+              88.42984020709991,
+              22.568980095843376
+            ]
+          ],
+    "Digitalcontents": [
+        {
+            "Url": "http://storage.googleapis.com/0syncspotteam-bucket01/Vdieo_635605735016179351.mp4",
+            "Name": "video mp4",
+            "Type": "video",
+            "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIdFCvbFc2epyT-svp1Dts4gtchWOjvgy2i-8bQwK8-aQzbz4rA",
+            "StartingTime": "9:00",
+            "EndingTime": "10:00"
+        },
+        {
+            "Url": "http://storage.googleapis.com/0syncspotteam-bucket01/Vdieo_635605735016179351.mp4",
+            "Name": "video mp4",
+            "Type": "video",
+            "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIdFCvbFc2epyT-svp1Dts4gtchWOjvgy2i-8bQwK8-aQzbz4rA",
+            "StartingTime": "9:00",
+            "EndingTime": "10:00"
+        }
+    ],
+    "LocationName": "Sector-V",
+    "Notification": "you are in Sector V"
 }
 */
 
@@ -421,12 +462,15 @@ exports.UploadDigitalContent = function(req,res)
     //201 : Channel already exists for the user.
     //404 : Data is not valid.
     //500 : Internal server error.
+
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid = new ObjectId(RequestData._userid);
     
     async.series([
         
         function(callback) {
 
-            adminUsersSchema.findOne({ _id: RequestData._userid, "Channel.ChannelName": RequestData.ChannelName }, function(err,obj) 
+            adminUsersSchema.findOne({ _id: _userid, "Channel.ChannelName": RequestData.ChannelName }, function(err,obj) 
             {
                 //console.log(JSON.stringify(obj));
                 if(err)
@@ -499,12 +543,13 @@ exports.UploadDigitalContent = function(req,res)
             else
             {
                 //res.send(AdminUserDbObject);
+                
                 AdminUserDbObject.save(function(err,finalobj){
                     if(err)
                     {
                         StatusCode = 500;
                         Message = "Internal server error";
-                        res.send({"_id" : "", "StatusCode" : StatusCode ,"Message" : Message});
+                        res.send({"_id" : err, "StatusCode" : StatusCode ,"Message" : Message});
                     }
                     else
                     {
