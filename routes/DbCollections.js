@@ -6,6 +6,8 @@ exports.mongoose = mongoose.connect('mongodb://localhost/SyncSpot');
 var Schema = mongoose.Schema;
 
 var UsersSchema = new Schema({
+    "firstName" : String,
+    "lastName" : String,
  	"email": String,
  	"password" : String,
     "gender": String,

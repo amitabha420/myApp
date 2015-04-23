@@ -34,17 +34,20 @@ exports.GetChannels = function(req,res)
     
 }
 
-
-//Create channel
-    
-//Input data
-/*{
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*Create channel
+This API will create a channel for a channel admin user. But only a channel will be created by user, no syncspot is created 
+for the user by this API.
+Input data
+{
   "_userid": "551d0aa75e297dec2204bd58",  //admin user id
   "ChannelName" : "channel2",
   "ChannelDescription" : "ChannelDescription",
   "BannerImageUrl" : "BannerImageUrl"
         
-  }*/
+}*/
 exports.Create = function(req,res)
 {
 
@@ -130,10 +133,10 @@ exports.Create = function(req,res)
             else
             {
                 var newchannel = {
-                    "ChannelName" : AdminUser.ChannelName,
+                                    "ChannelName" : AdminUser.ChannelName,
                                     "ChannelDescription" : AdminUser.ChannelDescription,
                                     "BannerImageUrl" : AdminUser.BannerImageUrl,
-                };
+                                };
                 AdminUserDbObject.Channel.push(newchannel);
                        // res.send(AdminUserDbObject.Channel[2]);
                         AdminUserDbObject.save(function(err,finalobj){
@@ -157,15 +160,19 @@ exports.Create = function(req,res)
 }
 
 
-//Edit channel
-//Input data
-/* 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*Edit channel
+channel admin user can edit only channel details by this API
+Input data
+ 
     {
-   "_userid": "551d0aa75e297dec2204bd58",
-  "ChannelName" : "channel3",
-  "ChannelDescription" : "this is changed",
-  "BannerImageUrl" : "BannerImageUrl"
-        
+        "_userid": "551d0aa75e297dec2204bd58",
+        "ChannelName" : "channel3",
+        "ChannelDescription" : "this is changed",
+        "BannerImageUrl" : "BannerImageUrl"
     }
 */
 exports.Edit = function(req,res){
@@ -208,11 +215,13 @@ exports.Edit = function(req,res){
 
 
 
-//Delete a particular channel
-//Not Working
-/* Input data
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*Delete a particular channel for a channel admin user
+Input data
     {
-        "_userid": "551d0aa75e297dec2204bd58",
+        "_userid": "551d0aa75e297dec2204bd58",  // channel admin user id
         "ChannelName" : "channel1"
     }
 */
@@ -262,11 +271,18 @@ exports.Delete = function(req,res)
     });
 }
 
-/*
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* This API is not enlisted in Backend excel for use if user. It will delete all geofencing data of a channel.
 {
         "_userid": "551d0aa75e297dec2204bd58",
         "ChannelName" : "channel1"
-    }
+}
 */
 exports.DeleteGeoFenceDataForChannel = function(req,res)
 {
@@ -353,11 +369,20 @@ exports.DeleteGeoFenceDataForChannel = function(req,res)
 
 
 
-/* Input Data
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* 
+This function will create a GeoLocation of a channel and also Insert Digital Content to it.
+-> same Geolocation name validation is done for a channel
+-> In content either StartingTime,EndingTime will be provided or MaxAccessValue will be provided. It could also be possible 
+that none of these 3 fileds will be provided for content. MaxAccessValue will not be set 0.
+Input Data
 {
     "_userid": "5534fea77dedf89f0a2a5017",
     "ChannelName": "HBO",
-    "CentralCoordinate" : [88.42984020709991,22.568980095843376 ],
+    "CentralCoordinate" : [88.42984020709991,22.568980095843376],
     "Coordinates": [
             [
               88.42984020709991,
@@ -395,7 +420,9 @@ exports.DeleteGeoFenceDataForChannel = function(req,res)
             "Type": "video",
             "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIdFCvbFc2epyT-svp1Dts4gtchWOjvgy2i-8bQwK8-aQzbz4rA",
             "StartingTime": "9:00",
-            "EndingTime": "10:00"
+            "EndingTime": "10:00",
+            "MaxAccessValue" : "5"
+
         },
         {
             "Url": "http://storage.googleapis.com/0syncspotteam-bucket01/Vdieo_635605735016179351.mp4",
@@ -403,16 +430,14 @@ exports.DeleteGeoFenceDataForChannel = function(req,res)
             "Type": "video",
             "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIdFCvbFc2epyT-svp1Dts4gtchWOjvgy2i-8bQwK8-aQzbz4rA",
             "StartingTime": "9:00",
-            "EndingTime": "10:00"
+            "EndingTime": "10:00",
+            "MaxAccessValue":""
         }
     ],
     "LocationName": "Sector-V",
     "Notification": "you are in Sector V"
 }
 */
-
-//same location name validation is done for a channel
-//This function will create a GeoLocation of a channel and also Insert Digital Content to it.
 exports.UploadDigitalContent = function(req,res)
 {
     var RequestData = req.body;
@@ -434,6 +459,7 @@ exports.UploadDigitalContent = function(req,res)
             var imageurl = defaultConfig.contentdefaultbanner ;
             var startTime = parseFloat(RequestData.Digitalcontents[i].StartingTime).toFixed(2);
             var endTime = parseFloat(RequestData.Digitalcontents[i].EndingTime).toFixed(2);
+            var MaxAccessValue = RequestData.Digitalcontents[i].MaxAccessValue;
             if(RequestData.Digitalcontents[i].ImageUrl)
             {
                 imageurl = RequestData.Digitalcontents[i].ImageUrl;
@@ -446,6 +472,7 @@ exports.UploadDigitalContent = function(req,res)
                 ImageUrl : imageurl,
                 StartingTime : startTime,
                 EndingTime : endTime,
+                MaxAccessValue : MaxAccessValue
             };
              GeoFencingData.Digitalcontents.push(content);
         };
@@ -566,8 +593,12 @@ exports.UploadDigitalContent = function(req,res)
         })
 }
 
-
-//Edit only a existing digital content of a geolocation of a channel
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+Edit only a existing digital content of a geolocation of a channel
+*/
 exports.EditDigitalContents = function(req,res)
 {
     var input = req.body;
@@ -622,6 +653,7 @@ exports.EditDigitalContents = function(req,res)
                                                 result.Channel[i].GeoFencingData[j].Digitalcontents[k].ImageUrl = input.New.Imageurl;
                                                 result.Channel[i].GeoFencingData[j].Digitalcontents[k].StartingTime = input.New.StartingTime,
                                                 result.Channel[i].GeoFencingData[j].Digitalcontents[k].EndingTime = input.New.EndingTime,
+                                                result.Channel[i].GeoFencingData[j].Digitalcontents[k].MaxAccessValue = input.New.MaxAccessValue,
                                                 channelindex = i;
                                                 fencingIndex = j;
                                                 fencingObj = result.Channel[i].GeoFencingData[j];
@@ -663,4 +695,120 @@ exports.EditDigitalContents = function(req,res)
                         //res.send(result);
                     });
     
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+This API will add a single new content to an existing geolocation in a channel
+-> No validation is done on same content addition in digital content addition
+INPUT
+{
+        "Url": "http://storage.googleapis.com/0syncspotteam-bucket01/Vdieo_635605735016179351.mp4",
+        "Name": "video mp4",
+        "Type": "video",
+        "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIdFCvbFc2epyT-svp1Dts4gtchWOjvgy2i-8bQwK8-aQzbz4rA",
+        "StartingTime": "9:00",
+        "EndingTime": "10:00",
+        "MaxAccessValue" : "5",
+        "_userid": "5535dd934ff5a9c0179147ee",
+        "ChannelName": "HBO",
+        "locationid" : "5538a08b955b7f901ba26b52"
+}
+
+*/
+exports.addContentToChannel = function(req,res)
+{
+
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid = new ObjectId(input._userid);
+    var locationid = new ObjectId(input.locationid);
+    var channelindex,fencingIndex;
+    var flag = false;
+    
+
+    //retrieve the channel user and update it.
+    //In our version I get Too many positional (i.e. '$') elements found in path  for update query which is get fixed in 3.1
+
+    var imageurl = defaultConfig.contentdefaultbanner ;
+    var startTime = parseFloat(input.StartingTime).toFixed(2);
+    var endTime = parseFloat(input.EndingTime).toFixed(2);
+    var MaxAccessValue = input.MaxAccessValue;
+
+    if(input.ImageUrl)
+    {
+        imageurl = input.ImageUrl;
+    }
+
+    adminUsersSchema.findOne({
+                    "_id" : _userid
+                    ,"Channel.ChannelName" : input.ChannelName
+                    ,"Channel.GeoFencingData._id" : locationid
+                    
+                    },function(err,result)
+                    {
+                        
+                        for (var i = 0; i < result.Channel.length ; i++) 
+                        {
+                            //console.log(JSON.stringify(result.Channel[i]));
+                            var channel = result.Channel[i];
+                            
+                            if(channel.ChannelName == input.ChannelName )    
+                            {
+                                for (var j = 0; j < channel.GeoFencingData.length; j++) 
+                                {
+                                    var fencing = channel.GeoFencingData[j];
+                                    if(fencing._id == input.locationid)
+                                    {
+                                        channelindex = i;
+                                        fencingIndex = j;
+                                        flag =true;
+                                        break;
+                                    }
+                                }
+                                if(flag)
+                                    break;
+                            }
+                        }
+                        console.log("channelindex : " + channelindex + "flag : " + flag);
+                        if(flag)
+                        {
+                            var content = 
+                                {
+                                    Url : input.Url,
+                                    Name : input.Name,
+                                    Type : input.Type,
+                                    ImageUrl : imageurl,
+                                    StartingTime : startTime,
+                                    EndingTime : endTime,
+                                    MaxAccessValue : MaxAccessValue
+                                };
+                            console.log(result.Channel[channelindex].GeoFencingData[fencingIndex].Digitalcontents.length);
+                            if(result.Channel[channelindex].GeoFencingData[fencingIndex].Digitalcontents.length == 0)
+                            {
+                                result.Channel[channelindex].GeoFencingData[fencingIndex].Digitalcontents = [];
+                            }
+                            result.Channel[channelindex].GeoFencingData[fencingIndex].Digitalcontents.push(content); 
+
+                            //save to database
+                            result.save(function(error,obj)
+                            {
+                                if(err)
+                                {
+                                    res.send({"result" : err, "StatusCode" : StatusCode ,"500" : "Internal server error"});
+                                }
+                                else
+                                {
+                                    res.send({"result" : obj, "StatusCode" : "200" ,"Message" : "OK"});
+                                }
+                            });   
+                        }
+                        else
+                        {
+                            res.send({"result" : "", "StatusCode" : "422" ,"Message" : "Unprocessable entity"});
+                        }
+                    });
 }

@@ -123,6 +123,52 @@ exports.Register = function (req, res)
         });
 } 
 
+exports.updateRegistration = function(req,res)
+{
+    var input = req.body;
+    console.log('in');
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid =  ObjectId(input._userid); 
+
+    
+    UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
+    {
+        if(err)
+        {
+            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+        }
+        else
+        {
+            if(obj!=null)
+            {
+                obj.firstName = input.firstName;
+                obj.lastName = input.lastName;
+                obj.gender = input.gender;
+                obj.age = input.age;
+                obj.profiletype = input.profiletype,
+                obj.token = input.token;
+
+                obj.save(function(error,result)
+                {
+                    if(err)
+                    {
+                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                    }
+                    else
+                    {
+                        res.send({"StatusCode" : "200",  "Message" : "OK"});
+                    }
+                });
+            }
+            else
+            {
+                res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+            }
+            
+        }
+    });
+}
+
 
 exports.Loggin = function (req, res) {
     

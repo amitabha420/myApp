@@ -2,8 +2,16 @@ var StatContentAccessSchema = require('./DbCollections.js').StatContentAccessSch
 var StatSyncSpotSchema = require('./DbCollections.js').StatSyncSpotSchema;
 var async = require('async');
 
-//Input
-/*
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*This API will be called whenever a content accessed by a user only if "MaxAccessValue" is not set for the content.
+If MaxAccessValue exists for the particular content then API "lockContent" will be called instead of this one.
+
+Input
+
 {
          "userid" : "552688594401bb2324f1d3b4",
          "channeladminid":"552facea8a5ec0b0060bf3ae",
@@ -40,9 +48,17 @@ exports.GetContentAccessFrequencyByeDays = function (req,res)
 }
 
 
-/*
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*This API will provide a statistical data for a user regarding "Datewise content access count by the user".
 {
-         "userid" : "552688594401bb2324f1d3b4"           
+    "userid" : "552688594401bb2324f1d3b4"           
  }
 */
 exports.GetUserContentAccessFrequencyDetails = function (req,res)
@@ -132,6 +148,13 @@ exports.GetUserContentAccessFrequencyDetails = function (req,res)
 	   })
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+This API will be called whenever an user get in to a SyncSpot.
+*/
 exports.SetUserInSyncSpot = function (req,res)
 {
 	var input = req.body;
@@ -156,6 +179,15 @@ exports.SetUserInSyncSpot = function (req,res)
 		});
 }
 
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*This API will be called whenever an user is get out from a SyncSpot */
 exports.SetUserOutSyncSpot = function (req,res)
 {
 	var input = req.body;
@@ -176,6 +208,18 @@ exports.SetUserOutSyncSpot = function (req,res)
 							);
 }
 
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+This API will provide no of access of a particular suncspot between 2 days.
+condition is : Where SyncSpot = ID and (Date > fromdate and Date <= toDate)
+*/ 
 exports.GetSyncSpotStatisticsBetweenDate = function(req,res)
 {
 	var input = req.body;
@@ -183,26 +227,14 @@ exports.GetSyncSpotStatisticsBetweenDate = function(req,res)
 	var _fromDate = input.fromDate;
 	var _toDate = input.toDate;
 	//res.send('hello');
-	console.log(_fromDate.length);
+	//console.log(_fromDate.length);
 	var fromDate = new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1]),parseInt(_fromDate[2]));
 	var toDate = new Date(parseInt(_toDate[0]),parseInt(_toDate[1]),parseInt(_toDate[2]));
 	
-	console.log(fromDate); 
-	console.log(toDate);
-	console.log(input.SyncSpotId);
+	//console.log(fromDate); 
+	//console.log(toDate);
+	//console.log(input.SyncSpotId);
 
-	/*
-	var cutoff = new Date();
-	cutoff.setDate(cutoff.getDate()-1);
-	console.log(cutoff);
-	StatSyncSpotSchema.find({SyncSpotInTime: {$gte: fromDate}}, function (err, docs) { 
-		if(err)
-				res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
-			else
-				res.send({"result" : docs, "StatusCode" : "200" ,"Message" : "OK"});  	
-	});*/
-	
-	
 	StatSyncSpotSchema.aggregate(
 	   [{
 	            //$match :{CreateDate : {$gt :toDate, $lte : fromDate}}  SyncSpotId : input.SyncSpotId,
@@ -268,7 +300,7 @@ exports.GetSyncSpotStatisticsBetweenDate = function(req,res)
                 {
 	           _id :  {
 	                        "SyncSpotId" : "$SyncSpotId",
-                                "SyncSpotName" : "$SyncSpotName",
+                            "SyncSpotName" : "$SyncSpotName",
 	                        "Date" : "$date"
 	                  },
 	                      
@@ -316,19 +348,23 @@ exports.callstoredFunction = function(req,res)
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*********************SUMMERY**********************/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* INPUT
 {
-    "MaxAccessValue" : 2,
+    "MaxAccessValue" : 2,  //This is value set by admin
     "userid" : "52688594401bb2324f1d3b1",
     "channeladminid":"552facea8a5ec0b0060bf3ae",
     "locationid" : "552fc6fb8a5ec0b0060bf3b0",
     "contenturl" : "http://en.wikipedia.org/w/index.php?title=Special:DoubleRedirects&limit=20&offset=0",
     "contentName" : "Example4aaa"
-            
  }
  
-*/
-//lock/unlock content depending on user access count set by admin for each day.
+
+This lock/unlock API provide permission for content access to a user depending on toatal user access count set by admin for
+each day.
+ */
 exports.lockContent = function(req,res)
 {
 	
@@ -450,7 +486,6 @@ async.waterfall([
 								}
 								callback(null,_totalcount);
 							});
-            
         }, //1st function end
 
         function( _totalcount,callback) {
@@ -459,10 +494,16 @@ async.waterfall([
 
         	var permission = true;
         	var insertToDb = true;
-        	/*if(_totalcount < MaxAccessValue )
-        	{*/
+
         		//need to add more fields
-        		StatContentAccessSchema.findOne({"userid":input.userid,"CreateDate" : {$gte:d}},
+        		StatContentAccessSchema.findOne(
+        			{
+        				"userid":input.userid,
+        				"CreateDate" : {$gte:d},
+        				"contenturl" : input.contenturl,
+                        "contentName" : input.contentName,
+                        "locationid" : input.locationid
+        			},
 	        	function(error,result)
 	        	{
 
@@ -473,7 +514,9 @@ async.waterfall([
 	        		}
 	        		else
 	        		{
-
+	        			/*When a user already access the content and he/she is enlisted in our data base, then he/she can access the
+	        			content for that day and no new database enlist is required.
+	        			*/
 	        			if(result != null)
 	        			{
 	        				permission = true;
@@ -495,14 +538,6 @@ async.waterfall([
 	        		}
 	        		callback(null,permission,insertToDb);
 	        	});
-        	/*}
-        	else
-        	{
-        		console.log("Permission :" + false);
-        		permission = false;
-        		callback(null,permission,false);
-        	}*/
-        	
         }, //2nd function end
         
         ], //end of function serize
