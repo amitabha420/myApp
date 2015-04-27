@@ -225,3 +225,62 @@ exports.Loggin = function (req, res) {
             res.send(response);
         })
 }
+
+exports.getUserDetails = function(req,res)
+{
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid =  ObjectId(input._userid); 
+
+    UsersCollection.findOne({_id : _userid},
+                             {
+                                 firstName : 1,
+                                 lastName : 1,
+                                 email : 1,
+                                 password : 1,
+                                 gender : 1,
+                                 age : 1,
+                                 prototype : 1,
+                                 token : 1,
+                                 _id : 0
+                             },
+                             function(err,obj)
+                             {
+                                if(err)
+                                {
+                                    res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                }
+                                else
+                                {
+                                    res.send({"result" : obj, "StatusCode" : "200" ,"Message" : "OK"});             
+                                }
+                             }
+                );
+}
+
+exports.changePassword = function(req,res)
+{
+     var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _userid =  ObjectId(input._userid); 
+
+
+    UsersCollection.findOne({_id : _userid,password:input.OldPassword},
+                             function(err,result)
+                             {
+                                result.password = input.NewPassword;
+                                result.save(function(err1,result)
+                                {
+                                    if(err1)
+                                    {
+                                        res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                    }
+                                    else
+                                    {
+                                        res.send({"StatusCode" : "200" ,"Message" : "OK"});             
+                                    }    
+                                });
+                                
+                             }
+                );
+}

@@ -44,6 +44,7 @@ var AdminUsersSchema = new Schema({
                                                 {
                                                     "Loc" : { type : {type: String }, coordinates : []  },
                                                     "CentralCoordinate":[],
+                                                    "Matchpoint" : {type : {type : String}, coordinates : []},
                                                     "Digitalcontents" : [],
                                                     "LocationName" : String,
                                                     "Notification" : String,

@@ -18,6 +18,11 @@ app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
 app.post('/updateRegistration',Register.updateRegistration);
 app.use('/Loggin',Register.Loggin);
+app.use('/User/getUserDetails',Register.getUserDetails);
+app.use('/User/ChangePassword',Register.changePassword);
+
+
+
 
 app.post('/CreateAdminUsers',AdminUsers.Create);
 

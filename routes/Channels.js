@@ -450,6 +450,7 @@ exports.UploadDigitalContent = function(req,res)
     var GeoFencingData = {
                             "Loc" : { type : {type : String} , coordinates : []  },
                             "Digitalcontents" : [],
+                            "Matchpoint" : { type : {type : String} , coordinates : []  },
                             "LocationName" : String,
                             "Notification" : String,
                         };
@@ -477,19 +478,22 @@ exports.UploadDigitalContent = function(req,res)
              GeoFencingData.Digitalcontents.push(content);
         };
         GeoFencingData.LocationName = RequestData.LocationName;
-        GeoFencingData.CentralCoordinate = [];
-        GeoFencingData.CentralCoordinate.push(RequestData.CentralCoordinate);
+        GeoFencingData.CentralCoordinate = RequestData.CentralCoordinate;//[];
+        //GeoFencingData.CentralCoordinate.push(RequestData.CentralCoordinate);
         GeoFencingData.Notification = RequestData.Notification;
         GeoFencingData.Loc.type = "Polygon";
         GeoFencingData.Loc.coordinates = [];
         GeoFencingData.Loc.coordinates.push(RequestData.Coordinates);
+
+        GeoFencingData.Matchpoint.type = "Point";
+        GeoFencingData.Matchpoint.coordinates = RequestData.CentralCoordinate;
         //res.send(GeoFencingData);
 
     //200 : OK
     //201 : Channel already exists for the user.
     //404 : Data is not valid.
     //500 : Internal server error.
-
+    
     var ObjectId = require('mongoose').Types.ObjectId;
     var _userid = new ObjectId(RequestData._userid);
     
