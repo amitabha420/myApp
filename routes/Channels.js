@@ -478,8 +478,9 @@ exports.UploadDigitalContent = function(req,res)
              GeoFencingData.Digitalcontents.push(content);
         };
         GeoFencingData.LocationName = RequestData.LocationName;
-        GeoFencingData.CentralCoordinate = RequestData.CentralCoordinate;//[];
-        //GeoFencingData.CentralCoordinate.push(RequestData.CentralCoordinate);
+        //GeoFencingData.CentralCoordinate = RequestData.CentralCoordinate;//[];
+        GeoFencingData.CentralCoordinate = [];
+        GeoFencingData.CentralCoordinate.push(RequestData.CentralCoordinate);
         GeoFencingData.Notification = RequestData.Notification;
         GeoFencingData.Loc.type = "Polygon";
         GeoFencingData.Loc.coordinates = [];
