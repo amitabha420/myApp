@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost/SyncSpot');
 
-exports.mongoose = mongoose.connect('mongodb://localhost/SyncSpot');
+//exports.mongoose = mongoose.connect('mongodb://localhost/SyncSpot');
+exports.mongoose = mongoose.connect('mongodb://localhost/NewSyncSpot');
 
 var Schema = mongoose.Schema;
 
@@ -32,30 +33,43 @@ var AdminUsersSchema = new Schema({
     					"ChannelDescription" : String,
                         "BannerImageUrl" : String,
                         "CreateDate" : {type: Date, default: Date.now},
-                        "ModifiedDate" : {type : Date, default : Date.now},        
-                        "SubscribedUsers" : 
-                                            [
-                                               {
-                                                  "Uid" : String
-                                               }
-                                            ],
-				 		"GeoFencingData" : 
-                                            [
-                                                {
-                                                    "Loc" : { type : {type: String }, coordinates : []  },
-                                                    "CentralCoordinate":[],
-                                                    "Matchpoint" : {type : {type : String}, coordinates : []},
-                                                    "Digitalcontents" : [],
-                                                    "LocationName" : String,
-                                                    "Notification" : String,
-                                                }
-                                            ]
+                        "ModifiedDate" : {type : Date, default : Date.now}     
+                        
     				}
     			]
 },{ collection: 'AdminUsers' });
-
-AdminUsersSchema.index({ "Channel.GeoFencingData.Loc" : '2dsphere'});
+//AdminUsersSchema.index({ "Channel.GeoFencingData.Loc" : '2dsphere'});
 exports.AdminUsersSchema = mongoose.model('AdminUsers', AdminUsersSchema);
+
+
+/*New Schema containing the geolocations*/
+var GeoLocationSchema = new Schema({
+    "UserId" : String,
+    "ChannelId" : String,
+    "ChannelName" : String,
+    "BannerImageUrl" : String,
+    "loc" : { type : {type: String }, coordinates : []  },
+    "Matchpoint" : {type : {type : String}, coordinates : []},
+    "Digitalcontents" : [
+                            {
+                                Url : String,
+                                Name : String,
+                                Type : String,
+                                ImageUrl : String,
+                                StartingTime : String,
+                                EndingTime : String,
+                                MaxAccessValue : String
+                            }
+                        ],
+    "LocationName" : String,
+    "Notification" : String,
+    "SubscribedUsers" : []
+},{collection: 'GeoLocations' });
+GeoLocationSchema.index({ "loc" : '2dsphere'});
+exports.GeoLocationSchema = mongoose.model('GeoLocations', GeoLocationSchema);
+
+
+
 
 
 //UserSavedContents collection for user/SaveContent and user/getContent API

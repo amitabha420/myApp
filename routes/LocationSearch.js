@@ -1,97 +1,74 @@
-var adminUsersSchema = require('./DbCollections.js').AdminUsersSchema;
+var GeoLocationSchema = require('./DbCollections.js').GeoLocationSchema;
 var async = require('async');
-//var defaultConfig = require('../defaultConfig.json');
-//var mongoose = require('mongoose');
-
-
-//This API is returning all the channels data from database. 
-//It will not be using in feature. Just do not delete for the query reference.
-//No input parameter required.
-exports.GetAllLocations = function(req,res)
-{
-	//var obj = adminUsersSchema.find({},{"Channel.GeoFencingData":1});
-	var obj = adminUsersSchema.aggregate([
-								{$project : {"GeoFencingData": "$Channel.GeoFencingData" ,_id:0}}
-										],function(err,result){
-
-											//console.log(JSON.stringify(result));
-											res.send(result);
-										});
-}
 
 
 //This Function takes argument 1. a coordinate 2. limit of response array.
 //OutPut: It will return the nearest 20 locations in 50 Km radius of the coordinate send.
 /*INPUT
 {
-  "lat":27.957108,
-  "lng":78.239136,
-  "limit":20
+  "lat": "88.429840207092",
+  "lng": "22.568980095843",
+  "limit": "2"
 }
 */
 exports.GeoLocations = function(req,res)
 {
-	var input = req.body;
+  var input = req.body;
   var lat = parseFloat(input.lat);
   var lng = parseFloat(input.lng);
   var limit = parseInt(input.limit);
-	var coordinate = [lat,lng];
+  var coordinate = [lat,lng];
 
   //console.log(parseFloat("5.265"));
   //console.log(lat + "," + lng);
 
-	//console.log(coordinate);
+  //console.log(coordinate);
+  GeoLocationSchema.find(
+  {
+    loc : {
+      $near : {
+        $geometry : { 
+          type : "Point" , 
+          coordinates : coordinate  
+        }, 
+        $maxDistance : 50000
+      }
+    }
+  }
+  ,
+  {
+    
+    ChannelName : 1,
+    ChannelId : 1,
+    BannerImageUrl : 1,
+    LocationName : 1,
+    _id : 1,
+    UserId : 1,
+    Notification : 1,
+    'Matchpoint' : 1,
+    'loc' : 1,
+  },
+  { skip: 0, limit: limit },
+  function(err,result)
+  {
+    if(err)
+      {
+        res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
+      }
+      else
+      {
+        res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
+      }
+  }
+);
 
-	adminUsersSchema.aggregate(
-                            [ 
-                            { $match :{'Channel.GeoFencingData.Loc': 
-                                            {
-                                                $geoNear : 
-                                                {
-                                                    $geometry: {"type": "Point", coordinates: coordinate}//,
-                                                    //$maxDistance: 112.1
-                                                    //50 / 6378137 
-                                                    //distanceMultiplier: 6378137
-                                                 }
-                                            }
-                                       }
-                             },
-                            { 
-                                $project: 
-                                    { 
-
-                                          "Channel.GeoFencingData.Loc.coordinates" : 1,
-                                          "Channel.ChannelName" : 1,
-                                          "Channel._id" : 1,
-                                          "Channel.BannerImageUrl" : 1,
-                                          "Channel.GeoFencingData.LocationName"  : 1,
-                                          "Channel.GeoFencingData.Notification"  : 1,
-                                          "Channel.GeoFencingData.CentralCoordinate"  : 1,
-                                          "Channel.GeoFencingData._id"  : 1 ,
-                                          _id : 1
-                                          //"id": "$_id"
-                                    }
-                            },
-                            { $limit : limit }
-                    ],function(err,result)
-                    {
-                    	if(err)
-                    	{
-                    		res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
-                    	}
-                    	else
-                    	{
-                    		res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
-                    	}
-                    });
-	//res.send('Ok');
 }
+
 
 
 /*INPUT
 {
   "channelid" : "552295e8a496af1c215a7236",
-  "locationid" : "55229660a496af1c215a7238"
 }
 
 OUTPUT : will be only digital contents.
@@ -99,49 +76,78 @@ OUTPUT : will be only digital contents.
 exports.GetContents = function(req,res)
 {
 	var input = req.body;
-	var ObjectId = require('mongoose').Types.ObjectId;
-	var channelid = new ObjectId(input.channelid);
 	//var locationid = new ObjectId(input.locationid);
 
-  console.log(channelid);
-
-/* 
-adminUsersSchema.aggregate([
-     { $unwind : "$Channel" },
-     { $unwind : "$Channel.GeoFencingData" },
-     { $match : {"Channel._id" : channelid, "Channel.GeoFencingData._id":locationid}},
-     { $project : {contents : "$Channel.GeoFencingData.Digitalcontents", _id : 0}},
-    ],function(error,result){
-    	if(error)
-            {
-              res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
-            }
-            else
-            {
-              res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
-            }
-    });
-*/
-adminUsersSchema.aggregate([
-     { $unwind : "$Channel" },
-     { $unwind : "$Channel.GeoFencingData" },
-     { $match : { "Channel._id" : channelid }},
-     { $project : { "contents" : "$Channel.GeoFencingData.Digitalcontents", 
-                    "Location" : "$Channel.GeoFencingData.LocationName",
-                    "LocationId" : "$Channel.GeoFencingData._id",
-                    "CentralCoordinate" : "$Channel.GeoFencingData.CentralCoordinate",
-                    "BannerUrl" : "$Channel.BannerImageUrl",
-                     "_id" : 0
-                  }
-      },
-    ],function(error,result){
-      if(error)
-            {
-              res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
-            }
-            else
-            {
-              res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
-            }
-    });
+  GeoLocationSchema.aggregate([
+                              { $match : { "ChannelId" : input.channelid }},
+                              {
+                                  $project : {    "contents" : "$Digitalcontents", 
+                                                  "Location" : "$LocationName",
+                                                  "LocationId" : "$_id",
+                                                  "CentralCoordinate" : "$Matchpoint.coordinates",
+                                                  "BannerUrl" : "$BannerImageUrl",
+                                                   "_id" : 0
+                                                }
+                              }
+                              ],function(error,result)
+                              {
+                                if(error)
+                                {
+                                  res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
+                                }
+                                else
+                                {
+                                  res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
+                                }
+                              })
 }
+
+
+
+/*{
+  "locationid" : "553e0299b8f249bc09444ca7"
+}*/
+exports.GetContentsOfSpecificLocation = function(req,res)
+{
+  var input = req.body;
+  var ObjectId = require('mongoose').Types.ObjectId;
+  var locationid = new ObjectId(input.locationid);
+ 
+
+ GeoLocationSchema.findOne({_id : locationid },
+                            {
+                                
+                                                Digitalcontents : 1,
+                                                LocationName : 1,
+                                                _id : 1,
+                                                Matchpoint : 1,
+                                                BannerImageUrl : 1,
+                                    
+                            },function(error,result){
+                              if(error)
+                                {
+                                  res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
+                                }
+                                else
+                                {
+                                  res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
+                                }
+
+                            }
+                            );
+}
+
+
+/* Get Content of a particular location
+db.GeoLocations.findOne({_id : ObjectId("553e0299b8f249bc09444ca7") },
+{
+    
+                    Digitalcontents : 1,
+                    LocationName : 1,
+                    _id : 1,
+                    Matchpoint : 1,
+                    BannerImageUrl : 1,
+        
+}
+)
+*/

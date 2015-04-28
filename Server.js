@@ -31,11 +31,11 @@ app.post('/CreateChannel',Channels.Create);
 app.post('/EditChannel',Channels.Edit);
 app.post('/DeleteChannel',Channels.Delete);
 app.post('/DeleteGeoFenceDataForChannel',Channels.DeleteGeoFenceDataForChannel);  //not mensioned by client
-app.post('/SetDigitalcontents',Channels.UploadDigitalContent);
+app.post('/CreateGeoLocation',Channels.CreateGeoLocation);
 app.post('/AlterDigitalcontents',Channels.EditDigitalContents);
 app.post('/addContentToChannel',Channels.addContentToChannel);  //not mensioned by client 
 
-app.post('/GetAllLocations',LocationSearch.GetAllLocations); //Not using now, Just keeping for reference
+app.post('/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
 app.post('/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
 app.post('/DigitalContents/GetContents',LocationSearch.GetContents);
 
