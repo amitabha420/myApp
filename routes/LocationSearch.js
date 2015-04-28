@@ -31,7 +31,7 @@ exports.GeoLocations = function(req,res)
           type : "Point" , 
           coordinates : coordinate  
         }, 
-        $maxDistance : 50000
+        $maxDistance : 100000
       }
     }
   }
