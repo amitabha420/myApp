@@ -128,53 +128,93 @@ exports.updateRegistration = function(req,res)
     var input = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
 
-    if(!ObjectId.isValid(input._userid))
+    if(input.profiletype == "manual")
     {
-        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
-    }
-    else
-    {
-        var _userid =  ObjectId(input._userid); 
-    
-        UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
+        if(!ObjectId.isValid(input._userid))
         {
-            if(err)
+            res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+        }
+        else
+        {
+            var _userid =  ObjectId(input._userid); 
+        
+            UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
             {
-                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-            }
-            else
-            {
-                if(obj!=null)
+                if(err)
                 {
-                    obj.firstName = input.firstName;
-                    obj.lastName = input.lastName;
-                    obj.gender = input.gender;
-                    obj.age = input.age;
-                    obj.profiletype = input.profiletype,
-                    obj.token = input.token;
-
-                    obj.save(function(error,result)
-                    {
-                        if(err)
-                        {
-                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                        }
-                        else
-                        {
-                            res.send({"StatusCode" : "200",  "Message" : "OK"});
-                        }
-                    });
+                    res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
                 }
                 else
                 {
-                    res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
-                }
-                
-            }
-        });
-    }
+                    if(obj!=null)
+                    {
+                        obj.firstName = input.firstName;
+                        obj.lastName = input.lastName;
+                        obj.gender = input.gender;
+                        obj.age = input.age;
+                        obj.profiletype = input.profiletype,
+                        obj.token = input.token;
 
-    
+                        obj.save(function(error,result)
+                        {
+                            if(err)
+                            {
+                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                            }
+                            else
+                            {
+                                res.send({"StatusCode" : "200",  "Message" : "OK"});
+                            }
+                        });
+                    }
+                    else
+                    {
+                        res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                    }
+                    
+                }
+            });
+        }
+    }
+    else
+    {
+        UsersCollection.findOne({token : input.token}, function(err,obj)   //, password : input.OldPassword
+            {
+                if(err)
+                {
+                    res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                }
+                else
+                {
+                    if(obj!=null)
+                    {
+                        obj.firstName = input.firstName;
+                        obj.lastName = input.lastName;
+                        obj.gender = input.gender;
+                        obj.age = input.age;
+                        obj.profiletype = input.profiletype,
+                        obj.token = input.token;
+
+                        obj.save(function(error,result)
+                        {
+                            if(err)
+                            {
+                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                            }
+                            else
+                            {
+                                res.send({"StatusCode" : "200",  "Message" : "OK"});
+                            }
+                        });
+                    }
+                    else
+                    {
+                        res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                    }
+                    
+                }
+            });
+    }
 }
 
 
