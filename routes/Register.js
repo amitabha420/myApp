@@ -126,47 +126,55 @@ exports.Register = function (req, res)
 exports.updateRegistration = function(req,res)
 {
     var input = req.body;
-    console.log('in');
     var ObjectId = require('mongoose').Types.ObjectId;
-    var _userid =  ObjectId(input._userid); 
 
-    
-    UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
+    if(!ObjectId.isValid(input._userid))
     {
-        if(err)
+        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+    }
+    else
+    {
+        var _userid =  ObjectId(input._userid); 
+    
+        UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
         {
-            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-        }
-        else
-        {
-            if(obj!=null)
+            if(err)
             {
-                obj.firstName = input.firstName;
-                obj.lastName = input.lastName;
-                obj.gender = input.gender;
-                obj.age = input.age;
-                obj.profiletype = input.profiletype,
-                obj.token = input.token;
-
-                obj.save(function(error,result)
-                {
-                    if(err)
-                    {
-                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                    }
-                    else
-                    {
-                        res.send({"StatusCode" : "200",  "Message" : "OK"});
-                    }
-                });
+                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
             }
             else
             {
-                res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                if(obj!=null)
+                {
+                    obj.firstName = input.firstName;
+                    obj.lastName = input.lastName;
+                    obj.gender = input.gender;
+                    obj.age = input.age;
+                    obj.profiletype = input.profiletype,
+                    obj.token = input.token;
+
+                    obj.save(function(error,result)
+                    {
+                        if(err)
+                        {
+                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                        }
+                        else
+                        {
+                            res.send({"StatusCode" : "200",  "Message" : "OK"});
+                        }
+                    });
+                }
+                else
+                {
+                    res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                }
+                
             }
-            
-        }
-    });
+        });
+    }
+
+    
 }
 
 
@@ -230,57 +238,74 @@ exports.getUserDetails = function(req,res)
 {
     var input = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
-    var _userid =  ObjectId(input._userid); 
 
-    UsersCollection.findOne({_id : _userid},
-                             {
-                                 firstName : 1,
-                                 lastName : 1,
-                                 email : 1,
-                                 password : 1,
-                                 gender : 1,
-                                 age : 1,
-                                 prototype : 1,
-                                 token : 1,
-                                 _id : 0
-                             },
-                             function(err,obj)
-                             {
-                                if(err)
-                                {
-                                    res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
-                                }
-                                else
-                                {
-                                    res.send({"result" : obj, "StatusCode" : "200" ,"Message" : "OK"});             
-                                }
-                             }
-                );
+    if(!ObjectId.isValid(input._userid))
+    {
+        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+    }
+    else
+    {
+        var _userid =  ObjectId(input._userid); 
+
+        UsersCollection.findOne({_id : _userid},
+                                 {
+                                     firstName : 1,
+                                     lastName : 1,
+                                     email : 1,
+                                     password : 1,
+                                     gender : 1,
+                                     age : 1,
+                                     prototype : 1,
+                                     token : 1,
+                                     _id : 0
+                                 },
+                                 function(err,obj)
+                                 {
+                                    if(err)
+                                    {
+                                        res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                    }
+                                    else
+                                    {
+                                        res.send({"result" : obj, "StatusCode" : "200" ,"Message" : "OK"});             
+                                    }
+                                 }
+                    );
+    }
 }
 
 exports.changePassword = function(req,res)
 {
      var input = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
-    var _userid =  ObjectId(input._userid); 
+
+    if(!ObjectId.isValid(input._userid))
+    {
+        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+    }
+    else
+    {
+        var _userid =  ObjectId(input._userid); 
 
 
-    UsersCollection.findOne({_id : _userid,password:input.OldPassword},
-                             function(err,result)
-                             {
-                                result.password = input.NewPassword;
-                                result.save(function(err1,result)
-                                {
-                                    if(err1)
+        UsersCollection.findOne({_id : _userid,password:input.OldPassword},
+                                 function(err,result)
+                                 {
+                                    result.password = input.NewPassword;
+                                    result.save(function(err1,result)
                                     {
-                                        res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
-                                    }
-                                    else
-                                    {
-                                        res.send({"StatusCode" : "200" ,"Message" : "OK"});             
-                                    }    
-                                });
-                                
-                             }
-                );
+                                        if(err1)
+                                        {
+                                            res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                        }
+                                        else
+                                        {
+                                            res.send({"StatusCode" : "200" ,"Message" : "OK"});             
+                                        }    
+                                    });
+                                    
+                                 }
+                    );
+    }
+    
 }
