@@ -161,106 +161,115 @@ exports.updateRegistration = function(req,res)
                 });
             }
             
-            
+            callback();
         }, //1st function end
 
         ], //end of function serize
             function(err) { //This function gets called after the two tasks have called their "task callbacks"
 
-            if(input.profiletype == "manual")
+            if(err)
             {
-                if(!ObjectId.isValid(input._userid))
-                {
-                    res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
-                }
-                else
-                {
-                    var _userid =  ObjectId(input._userid); 
-                
-                    UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
-                    {
-                        if(err)
-                        {
-                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                        }
-                        else
-                        {
-                            if(obj!=null)
-                            {
-                                obj.firstName = input.firstName;
-                                obj.lastName = input.lastName;
-                                obj.gender = input.gender;
-                                obj.age = input.age;
-                                obj.profiletype = input.profiletype,
-                                obj.token = input.token;
-
-                                if(input.profiletype == 'manual' && input.imagefile != '')
-                                {
-                                    obj.profileimageurl = defaultConfig.baseIp + defaultConfig.staticImagePath + uniqueSHA1String + ".jpg" ;    
-                                }
-                                
-
-                                obj.save(function(error,result)
-                                {
-                                    if(err)
-                                    {
-                                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                                    }
-                                    else
-                                    {
-                                        res.send({"StatusCode" : "200",  "Message" : "OK"});
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
-                            }
-                            
-                        }
-                    });
-                }
+                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
             }
             else
             {
-                UsersCollection.findOne({token : input.token}, function(err,obj)   //, password : input.OldPassword
+                if(input.profiletype == "manual")
+                {
+                    if(!ObjectId.isValid(input._userid))
                     {
-                        if(err)
+                        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+                    }
+                    else
+                    {
+                        var _userid =  ObjectId(input._userid); 
+                    
+                        UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
                         {
-                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                        }
-                        else
-                        {
-                            if(obj!=null)
+                            if(err)
                             {
-                                obj.firstName = input.firstName;
-                                obj.lastName = input.lastName;
-                                obj.gender = input.gender;
-                                obj.age = input.age;
-                                obj.profiletype = input.profiletype,
-                                obj.token = input.token;
-                                obj.profileimageurl = input.imageurl;
-
-                                obj.save(function(error,result)
-                                {
-                                    if(err)
-                                    {
-                                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                                    }
-                                    else
-                                    {
-                                        res.send({"StatusCode" : "200",  "Message" : "OK"});
-                                    }
-                                });
+                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
                             }
                             else
                             {
-                                res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                                if(obj!=null)
+                                {
+                                    obj.firstName = input.firstName;
+                                    obj.lastName = input.lastName;
+                                    obj.gender = input.gender;
+                                    obj.age = input.age;
+                                    obj.profiletype = input.profiletype,
+                                    obj.token = input.token;
+
+                                    if(input.profiletype == 'manual' && input.imagefile != '')
+                                    {
+                                        obj.profileimageurl = defaultConfig.baseIp + defaultConfig.staticImagePath + uniqueSHA1String + ".jpg" ;    
+                                    }
+                                    
+
+                                    obj.save(function(error,result)
+                                    {
+                                        if(err)
+                                        {
+                                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                        }
+                                        else
+                                        {
+                                            res.send({"StatusCode" : "200",  "Message" : "OK"});
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                                }
+                                
                             }
-                            
-                        }
-                    });
+                        });
+                    }
+                }
+                else
+                {
+                    UsersCollection.findOne({token : input.token}, function(err,obj)   //, password : input.OldPassword
+                        {
+                            if(err)
+                            {
+                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                            }
+                            else
+                            {
+                                if(obj!=null)
+                                {
+                                    obj.firstName = input.firstName;
+                                    obj.lastName = input.lastName;
+                                    obj.gender = input.gender;
+                                    obj.age = input.age;
+                                    obj.profiletype = input.profiletype,
+                                    obj.token = input.token;
+                                    obj.profileimageurl = input.imageurl;
+
+                                    obj.save(function(error,result)
+                                    {
+                                        if(err)
+                                        {
+                                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                        }
+                                        else
+                                        {
+                                            res.send({"StatusCode" : "200",  "Message" : "OK"});
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                                }
+                                
+                            }
+                        });
+                }
             }
+
+            
         })
 }
 

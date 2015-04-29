@@ -16,6 +16,7 @@ app.configure(function () {
 
 /*static elements*/
 app.use('/gcloud/syncspot/static/img',express.static("static" + "/img"));
+
 /*end static elements*/
  
 app.get('/Register', Register.Test);
