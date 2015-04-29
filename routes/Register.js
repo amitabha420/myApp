@@ -262,11 +262,6 @@ exports.updateRegistration = function(req,res)
                     });
             }
         })
-
-////////////////////
-
-
-
 }
 
 
@@ -349,6 +344,7 @@ exports.getUserDetails = function(req,res)
                                      age : 1,
                                      prototype : 1,
                                      token : 1,
+                                     profileimageurl : 1,
                                      _id : 0
                                  },
                                  function(err,obj)
@@ -402,6 +398,7 @@ exports.changePassword = function(req,res)
     
 }
 
+/*
 exports.SaveImage = function(req,res)
 {
     var fs = require("fs");
@@ -432,3 +429,4 @@ exports.SaveImage = function(req,res)
     });
     
 }
+*/
