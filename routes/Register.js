@@ -145,7 +145,7 @@ exports.updateRegistration = function(req,res)
      async.series([
         
         function(callback) {
-            if(input.profiletype == 'manual' && input.imagefile != '')
+            if(input.profiletype == 'manual' && input.ImageFile != '')
             {
                fs.writeFile(imagename, new Buffer(input.ImageFile, "base64"), function(err) 
                 {
@@ -200,7 +200,7 @@ exports.updateRegistration = function(req,res)
                                     obj.profiletype = input.profiletype,
                                     obj.token = input.token;
 
-                                    if(input.profiletype == 'manual' && input.imagefile != '')
+                                    if(input.profiletype == 'manual' && input.ImageFile != '')
                                     {
                                         obj.profileimageurl = defaultConfig.baseIp + defaultConfig.staticImagePath + uniqueSHA1String + ".jpg" ;    
                                     }
