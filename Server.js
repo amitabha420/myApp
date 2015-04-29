@@ -21,10 +21,10 @@ app.use('/gcloud/syncspot/static/img',express.static("static" + "/img"));
 app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
 app.post('/updateRegistration',Register.updateRegistration);
-app.use('/Loggin',Register.Loggin);
-app.use('/User/getUserDetails',Register.getUserDetails);
-app.use('/User/ChangePassword',Register.changePassword);
-app.use('/User/SaveImage',Register.SaveImage);
+app.post('/Loggin',Register.Loggin);
+app.post('/User/getUserDetails',Register.getUserDetails);
+app.post('/User/ChangePassword',Register.changePassword);
+
 
 
 
