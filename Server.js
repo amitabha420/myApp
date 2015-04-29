@@ -13,6 +13,10 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
  
+
+/*static elements*/
+app.use('/gcloud/syncspot/static/img',express.static("static" + "/img"));
+/*end static elements*/
  
 app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
@@ -20,6 +24,7 @@ app.post('/updateRegistration',Register.updateRegistration);
 app.use('/Loggin',Register.Loggin);
 app.use('/User/getUserDetails',Register.getUserDetails);
 app.use('/User/ChangePassword',Register.changePassword);
+app.use('/User/SaveImage',Register.SaveImage);
 
 
 

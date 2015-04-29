@@ -1,6 +1,7 @@
 var emailvalidator = require("email-validator");
 var async = require('async');
 var UsersCollection = require('./DbCollections.js').UsersCollection;
+var defaultConfig = require('../defaultConfig.json');
 
 exports.Test = function(req,res)
 {
@@ -128,93 +129,144 @@ exports.updateRegistration = function(req,res)
     var input = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
 
-    if(input.profiletype == "manual")
-    {
-        if(!ObjectId.isValid(input._userid))
-        {
-            res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
-        }
-        else
-        {
-            var _userid =  ObjectId(input._userid); 
+
+    /*Image file save related variables*/
+    var fs = require("fs");
+    var crypto = require('crypto');
+    var seed   = crypto.randomBytes(20);
+    var uniqueSHA1String  = crypto
+                            .createHash('sha1')
+                            .update(seed)
+                            .digest('hex');
+    var imagename = "../myApp/static/img/" + uniqueSHA1String + ".jpg";
+    
+    /*end*/
+
+     async.series([
         
-            UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
+        function(callback) {
+            if(input.profiletype == 'manual' && input.imagefile != '')
             {
-                if(err)
+               fs.writeFile(imagename, new Buffer(input.ImageFile, "base64"), function(err) 
                 {
-                    res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                }
-                else
-                {
-                    if(obj!=null)
+                    if(err)
                     {
-                        obj.firstName = input.firstName;
-                        obj.lastName = input.lastName;
-                        obj.gender = input.gender;
-                        obj.age = input.age;
-                        obj.profiletype = input.profiletype,
-                        obj.token = input.token;
-
-                        obj.save(function(error,result)
-                        {
-                            if(err)
-                            {
-                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                            }
-                            else
-                            {
-                                res.send({"StatusCode" : "200",  "Message" : "OK"});
-                            }
-                        });
+                        console.log(err);
                     }
                     else
                     {
-                        res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                        console.log('saved');   
+                        callback();  
                     }
-                    
-                }
-            });
-        }
-    }
-    else
-    {
-        UsersCollection.findOne({token : input.token}, function(err,obj)   //, password : input.OldPassword
+                });
+            }
+            
+            
+        }, //1st function end
+
+        ], //end of function serize
+            function(err) { //This function gets called after the two tasks have called their "task callbacks"
+
+            if(input.profiletype == "manual")
             {
-                if(err)
+                if(!ObjectId.isValid(input._userid))
                 {
-                    res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                    res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
                 }
                 else
                 {
-                    if(obj!=null)
+                    var _userid =  ObjectId(input._userid); 
+                
+                    UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
                     {
-                        obj.firstName = input.firstName;
-                        obj.lastName = input.lastName;
-                        obj.gender = input.gender;
-                        obj.age = input.age;
-                        obj.profiletype = input.profiletype,
-                        obj.token = input.token;
-
-                        obj.save(function(error,result)
+                        if(err)
                         {
-                            if(err)
+                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                        }
+                        else
+                        {
+                            if(obj!=null)
                             {
-                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                obj.firstName = input.firstName;
+                                obj.lastName = input.lastName;
+                                obj.gender = input.gender;
+                                obj.age = input.age;
+                                obj.profiletype = input.profiletype,
+                                obj.token = input.token;
+
+                                if(input.profiletype == 'manual' && input.imagefile != '')
+                                {
+                                    obj.profileimageurl = defaultConfig.baseIp + defaultConfig.staticImagePath + uniqueSHA1String + ".jpg" ;    
+                                }
+                                
+
+                                obj.save(function(error,result)
+                                {
+                                    if(err)
+                                    {
+                                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                    }
+                                    else
+                                    {
+                                        res.send({"StatusCode" : "200",  "Message" : "OK"});
+                                    }
+                                });
                             }
                             else
                             {
-                                res.send({"StatusCode" : "200",  "Message" : "OK"});
+                                res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
                             }
-                        });
-                    }
-                    else
-                    {
-                        res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
-                    }
-                    
+                            
+                        }
+                    });
                 }
-            });
-    }
+            }
+            else
+            {
+                UsersCollection.findOne({token : input.token}, function(err,obj)   //, password : input.OldPassword
+                    {
+                        if(err)
+                        {
+                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                        }
+                        else
+                        {
+                            if(obj!=null)
+                            {
+                                obj.firstName = input.firstName;
+                                obj.lastName = input.lastName;
+                                obj.gender = input.gender;
+                                obj.age = input.age;
+                                obj.profiletype = input.profiletype,
+                                obj.token = input.token;
+                                obj.profileimageurl = input.imageurl;
+
+                                obj.save(function(error,result)
+                                {
+                                    if(err)
+                                    {
+                                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                    }
+                                    else
+                                    {
+                                        res.send({"StatusCode" : "200",  "Message" : "OK"});
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                            }
+                            
+                        }
+                    });
+            }
+        })
+
+////////////////////
+
+
+
 }
 
 
@@ -347,5 +399,36 @@ exports.changePassword = function(req,res)
                                  }
                     );
     }
+    
+}
+
+exports.SaveImage = function(req,res)
+{
+    var fs = require("fs");
+
+    var input =  req.body;
+
+    var crypto = require('crypto');
+    var seed   = crypto.randomBytes(20);
+    var uniqueSHA1String  = crypto
+                            .createHash('sha1')
+                            .update(seed)
+                            .digest('hex');
+    //console.log(crypto);
+
+    var imagename = "../myApp/static/img/" + uniqueSHA1String + ".jpg";
+    console.log(imagename);
+
+    fs.writeFile(imagename, new Buffer(input.ImageFile, "base64"), function(err) 
+    {
+        if(err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.send('ok');        
+        }
+    });
     
 }

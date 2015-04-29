@@ -14,7 +14,8 @@ var UsersSchema = new Schema({
     "gender": String,
     "age": String,
     "profiletype": String,  //values => facebook/twitter/manual(default)
-    "token" : String
+    "token" : String,
+    "profileimageurl" : String
 },{ collection: 'Users' });
 
 exports.UsersCollection = mongoose.model('Users', UsersSchema);
