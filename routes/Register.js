@@ -97,8 +97,6 @@ exports.Register = function (req, res)
             }
             else
             {
-                var randomPassword = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
-                console.log(randomPassword);
                 var User = new UsersCollection({
                 "email": userobj.email,
                 "password" : userobj.password,
@@ -107,6 +105,11 @@ exports.Register = function (req, res)
                 "profiletype": userobj.profiletype,
                 "token" : userobj.token
                 });
+
+                if(User.profiletype != 'manual')
+                {
+                    User.profileimageurl = userobj.imageurl;
+                }
             
                 User.save(function (err, obj) {
                     if (err) 
@@ -152,6 +155,7 @@ exports.updateRegistration = function(req,res)
                     if(err)
                     {
                         console.log(err);
+                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
                     }
                     else
                     {
@@ -400,8 +404,10 @@ exports.changePassword = function(req,res)
     {
         var _userid =  ObjectId(input._userid); 
 
-
-        UsersCollection.findOne({_id : _userid,password:input.OldPassword},
+        if(input.profiletype != 'manual')
+        {
+        
+            UsersCollection.findOne({_id : _userid},
                                  function(err,result)
                                  {
                                     result.password = input.NewPassword;
@@ -418,7 +424,29 @@ exports.changePassword = function(req,res)
                                     });
                                     
                                  }
-                    );
+                    );   
+        }
+        else
+        {
+            UsersCollection.findOne({_id : _userid,password:input.OldPassword},
+                                 function(err,result)
+                                 {
+                                    result.password = input.NewPassword;
+                                    result.save(function(err1,result)
+                                    {
+                                        if(err1)
+                                        {
+                                            res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                        }
+                                        else
+                                        {
+                                            res.send({"StatusCode" : "200" ,"Message" : "OK"});             
+                                        }    
+                                    });
+                                    
+                                 }
+                    );    
+        }
     }
     
 }
