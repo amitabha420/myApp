@@ -173,8 +173,6 @@ exports.updateRegistration = function(req,res)
             }
             else
             {
-                if(input.profiletype == "manual")
-                {
                     if(!ObjectId.isValid(input._userid))
                     {
                         res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
@@ -193,16 +191,30 @@ exports.updateRegistration = function(req,res)
                             {
                                 if(obj!=null)
                                 {
+                                    /*
                                     obj.firstName = input.firstName;
                                     obj.lastName = input.lastName;
                                     obj.gender = input.gender;
                                     obj.age = input.age;
                                     obj.profiletype = input.profiletype,
-                                    obj.token = input.token;
+                                    obj.token = input.token;*/
+
+                                    obj.email = input.email
+                                    obj.firstName = input.firstName;
+                                    obj.lastName = input.lastName;
+                                    obj.gender = input.gender;
+                                    obj.age = input.age;
+                                    obj.profiletype = input.profiletype;
+                                    //obj.token = input.token;
+                                    
 
                                     if(input.profiletype == 'manual' && input.ImageFile != '')
                                     {
                                         obj.profileimageurl = defaultConfig.baseIp + defaultConfig.staticImagePath + uniqueSHA1String + ".jpg" ;    
+                                    }
+                                    else
+                                    {
+                                        obj.profileimageurl = input.imageurl;    
                                     }
                                     
 
@@ -226,8 +238,8 @@ exports.updateRegistration = function(req,res)
                             }
                         });
                     }
-                }
-                else
+                
+                /*else
                 {
                     UsersCollection.findOne({token : input.token}, function(err,obj)   //, password : input.OldPassword
                         {
@@ -266,7 +278,7 @@ exports.updateRegistration = function(req,res)
                                 
                             }
                         });
-                }
+                }*/
             }
 
             
@@ -351,8 +363,8 @@ exports.getUserDetails = function(req,res)
                                      password : 1,
                                      gender : 1,
                                      age : 1,
-                                     prototype : 1,
-                                     token : 1,
+                                     profiletype : 1,
+                                     //token : 1,
                                      profileimageurl : 1,
                                      _id : 0
                                  },
