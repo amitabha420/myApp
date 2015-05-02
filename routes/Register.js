@@ -156,12 +156,16 @@ exports.updateRegistration = function(req,res)
                     else
                     {
                         console.log('saved');   
-                        //callback();  
+                        callback();  
                     }
                 });
             }
+            else
+            {
+              callback();  
+            }
             
-            callback();
+            //
         }, //1st function end
 
         ], //end of function serize
