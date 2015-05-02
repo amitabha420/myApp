@@ -156,7 +156,7 @@ exports.updateRegistration = function(req,res)
                     else
                     {
                         console.log('saved');   
-                        callback();  
+                        //callback();  
                     }
                 });
             }
