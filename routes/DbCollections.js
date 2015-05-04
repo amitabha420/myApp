@@ -97,6 +97,7 @@ var StatContentAccessSchema = new Schema({
     locationid : String,
     contenturl : String,
     contentName : String,
+    contentid : String,
     CreateDate : {type: Date, default: Date.now}
 },{collection : 'StatContentAccess'});
 

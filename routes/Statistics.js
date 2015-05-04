@@ -32,6 +32,7 @@ exports.EnlistContentAccess = function(req,res)
 	StatContentAccess.locationid = input.locationid;
 	StatContentAccess.contenturl = input.contenturl;
 	StatContentAccess.contentName = input.contentName;
+	StatContentAccess.contentid = input.contentid;
 
 	StatContentAccess.save(function(err,obj)
 		{
