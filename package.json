@@ -3,7 +3,10 @@
   "description": "It is mobile application api",
   "version": "0.0.1",
   "private": true,
- 
+  "scripts": 
+    { 
+    } ,
+  
   "dependencies": {
     "express": "4.8.7",
     "body-parser": "1.7.0",

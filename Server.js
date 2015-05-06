@@ -8,9 +8,13 @@ var express = require('express');
     SaveChannelContents = require('./routes/SaveChannelContents');
     Statistics = require('./routes/Statistics');
 var app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
- 
+
+
+app.use(bodyParser.json({limit: '10mb'}))
+   .use(bodyParser.urlencoded({limit: '10mb', extended: true}));
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({extended: true}));
+//app.use(express.bodyParser({limit: '10mb'}));
  
  /*
 app.configure(function () {
