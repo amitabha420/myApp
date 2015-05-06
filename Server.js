@@ -1,5 +1,6 @@
 
-var express = require('express'),
+var express = require('express');
+    bodyParser = require('body-parser');
     Register = require('./routes/Register');
     AdminUsers = require('./routes/AdminUsers');
     Channels = require('./routes/Channels');
@@ -7,11 +8,15 @@ var express = require('express'),
     SaveChannelContents = require('./routes/SaveChannelContents');
     Statistics = require('./routes/Statistics');
 var app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
  
+ 
+ /*
 app.configure(function () {
-    app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
+    app.use(express.logger('dev'));     // 'default', 'short', 'tiny', 'dev'
     app.use(express.bodyParser());
-});
+});*/
  
 
 /*static elements*/
