@@ -361,69 +361,7 @@ exports.DeleteGeoFenceDataForChannel = function(req,res)
 /* 
 This function will create a GeoLocation of a channel .
 -> same Geolocation name validation is done for a channel
-//-> In content either StartingTime,EndingTime will be provided or MaxAccessValue will be provided. It could also be possible 
-//that none of these 3 fileds will be provided for content. MaxAccessValue will not be set 0.
 Input Data
-{
-    "_userid": "5534fea77dedf89f0a2a5017",
-    "ChannelName": "HBO",
-    "CentralCoordinate" : [88.42984020709991,22.568980095843376],
-    "Coordinates": [
-            [
-              88.42984020709991,
-              22.568980095843376
-            ],
-            [
-              88.43088090419769,
-              22.569217868482212
-            ],
-            [
-              88.43097746372223,
-              22.568890930998084
-            ],
-            [
-              88.43067705631256,
-              22.568563992738593
-            ],
-            [
-              88.43004941940308,
-              22.568593714430587
-            ],
-            [
-              88.42975437641144,
-              22.568796812487697
-            ],
-            [
-              88.42984020709991,
-              22.568980095843376
-            ]
-          ],
-    "Digitalcontents": [
-        {
-            "Url": "http://storage.googleapis.com/0syncspotteam-bucket01/Vdieo_635605735016179351.mp4",
-            "Name": "video mp4",
-            "Type": "video",
-            "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIdFCvbFc2epyT-svp1Dts4gtchWOjvgy2i-8bQwK8-aQzbz4rA",
-            "StartingTime": "9:00",
-            "EndingTime": "10:00",
-            "MaxAccessValue" : "5"
-
-        },
-        {
-            "Url": "http://storage.googleapis.com/0syncspotteam-bucket01/Vdieo_635605735016179351.mp4",
-            "Name": "video mp4",
-            "Type": "video",
-            "ImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRIdFCvbFc2epyT-svp1Dts4gtchWOjvgy2i-8bQwK8-aQzbz4rA",
-            "StartingTime": "9:00",
-            "EndingTime": "10:00",
-            "MaxAccessValue":""
-        }
-    ],
-    "LocationName": "Sector-V",
-    "Notification": "you are in Sector V"
-}
-
-
 
 {
     "_userid": "553de5d4b899e2601758c0a3",
