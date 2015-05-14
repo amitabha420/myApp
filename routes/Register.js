@@ -5,12 +5,14 @@ var defaultConfig = require('../defaultConfig.json');
 
 exports.Test = function(req,res)
 {
-    res.send('Test the api is ok...response code 200');
+    console.log('Rgister - GET . Time : ' + new Date());
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).send('Test the api is ok...response code 200');
 }
 
 exports.Register = function (req, res) 
 {
-    
+   
     var userobj = req.body;
 
     var StatusCode = 200;
@@ -81,19 +83,19 @@ exports.Register = function (req, res)
 
             if(StatusCode == 201)
             {
-                res.send({"_id" : "", "StatusCode" : StatusCode ,"Message" : "Invalid email"});
+                res.status(200).send({"_id" : "", "StatusCode" : StatusCode ,"Message" : "Invalid email"});
             }
             else if(StatusCode == 202)
             {
-                res.send({"_id" : "" , "StatusCode" : StatusCode ,"Message" : "Invalid phone no"});
+                res.status(200).send({"_id" : "" , "StatusCode" : StatusCode ,"Message" : "Invalid phone no"});
             }
             else if(StatusCode == 203)
             {
-                res.send({"_id" : __id, "StatusCode" : StatusCode , "Message" : "user already registered"});
+                res.status(200).send({"_id" : __id, "StatusCode" : StatusCode , "Message" : "user already registered"});
             }
             else if(StatusCode == 500)
             {
-                res.send({"_id" : "", "StatusCode" : StatusCode, "Message" : "Internal server error"});
+                res.status(200).send({"_id" : "", "StatusCode" : StatusCode, "Message" : "Internal server error"});
             }
             else
             {
@@ -115,12 +117,12 @@ exports.Register = function (req, res)
                     if (err) 
                     {
                         console.log(err);// ...
-                        res.send({"_id" : "" , "StatusCode" : "500",  "Message" : "Internal server error"});
+                        res.status(200).send({"_id" : "" , "StatusCode" : "500",  "Message" : "Internal server error"});
                     }
                     else
                     {
                         var responseObj = {"_id" : obj._id , "StatusCode" : "200", "Message" : "Congratulations! You have successfully registered with SyncSpot."};
-                        res.send(responseObj);    
+                        res.status(200).send(responseObj);    
                     }
                 });
             }
@@ -155,7 +157,7 @@ exports.updateRegistration = function(req,res)
                     if(err)
                     {
                         console.log(err);
-                        res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                        res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
                     }
                     else
                     {
@@ -177,13 +179,13 @@ exports.updateRegistration = function(req,res)
 
             if(err)
             {
-                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
             }
             else
             {
                     if(!ObjectId.isValid(input._userid))
                     {
-                        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+                        res.status(200).send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
                     }
                     else
                     {
@@ -193,7 +195,7 @@ exports.updateRegistration = function(req,res)
                         {
                             if(err)
                             {
-                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
                             }
                             else
                             {
@@ -230,66 +232,23 @@ exports.updateRegistration = function(req,res)
                                     {
                                         if(err)
                                         {
-                                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                            res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
                                         }
                                         else
                                         {
-                                            res.send({"StatusCode" : "200",  "Message" : "OK"});
+                                            res.status(200).send({"StatusCode" : "200",  "Message" : "OK"});
                                         }
                                     });
                                 }
                                 else
                                 {
-                                    res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                                    res.status(200).send({"StatusCode" : "404",  "Message" : "Data is not valid"});
                                 }
                                 
                             }
                         });
                     }
-                
-                /*else
-                {
-                    UsersCollection.findOne({token : input.token}, function(err,obj)   //, password : input.OldPassword
-                        {
-                            if(err)
-                            {
-                                res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                            }
-                            else
-                            {
-                                if(obj!=null)
-                                {
-                                    obj.firstName = input.firstName;
-                                    obj.lastName = input.lastName;
-                                    obj.gender = input.gender;
-                                    obj.age = input.age;
-                                    obj.profiletype = input.profiletype,
-                                    obj.token = input.token;
-                                    obj.profileimageurl = input.imageurl;
-
-                                    obj.save(function(error,result)
-                                    {
-                                        if(err)
-                                        {
-                                            res.send({"StatusCode" : "500",  "Message" : "Internal server error"});
-                                        }
-                                        else
-                                        {
-                                            res.send({"StatusCode" : "200",  "Message" : "OK"});
-                                        }
-                                    });
-                                }
-                                else
-                                {
-                                    res.send({"StatusCode" : "404",  "Message" : "Data is not valid"});
-                                }
-                                
-                            }
-                        });
-                }*/
             }
-
-            
         })
 }
 
@@ -346,18 +305,19 @@ exports.Loggin = function (req, res) {
         ], //end of function serize
             function(err) { //This function gets called after the two tasks have called their "task callbacks"
 
-            res.send(response);
+            res.status(200).send(response);
         })
 }
 
 exports.getUserDetails = function(req,res)
 {
+    
     var input = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
 
     if(!ObjectId.isValid(input._userid))
     {
-        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+        res.status(200).send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
     }
     else
     {
@@ -380,11 +340,11 @@ exports.getUserDetails = function(req,res)
                                  {
                                     if(err)
                                     {
-                                        res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                        res.status(200).send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
                                     }
                                     else
                                     {
-                                        res.send({"result" : obj, "StatusCode" : "200" ,"Message" : "OK"});             
+                                        res.status(200).send({"result" : obj, "StatusCode" : "200" ,"Message" : "OK"});             
                                     }
                                  }
                     );
@@ -393,12 +353,13 @@ exports.getUserDetails = function(req,res)
 
 exports.changePassword = function(req,res)
 {
-     var input = req.body;
+    
+    var input = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
 
     if(!ObjectId.isValid(input._userid))
     {
-        res.send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+        res.status(200).send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
     }
     else
     {
@@ -411,15 +372,15 @@ exports.changePassword = function(req,res)
                                  function(err,result)
                                  {
                                     result.password = input.NewPassword;
-                                    result.save(function(err1,result)
+                                    result.status(200).save(function(err1,result)
                                     {
                                         if(err1)
                                         {
-                                            res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                            res.status(200).send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
                                         }
                                         else
                                         {
-                                            res.send({"StatusCode" : "200" ,"Message" : "OK"});             
+                                            res.status(200).send({"StatusCode" : "200" ,"Message" : "OK"});             
                                         }    
                                     });
                                     
@@ -436,11 +397,11 @@ exports.changePassword = function(req,res)
                                     {
                                         if(err1)
                                         {
-                                            res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
+                                            res.status(200).send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
                                         }
                                         else
                                         {
-                                            res.send({"StatusCode" : "200" ,"Message" : "OK"});             
+                                            res.status(200).send({"StatusCode" : "200" ,"Message" : "OK"});             
                                         }    
                                     });
                                     
