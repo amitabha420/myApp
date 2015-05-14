@@ -372,7 +372,7 @@ exports.changePassword = function(req,res)
                                  function(err,result)
                                  {
                                     result.password = input.NewPassword;
-                                    result.status(200).save(function(err1,result)
+                                    result.save(function(err1,result)
                                     {
                                         if(err1)
                                         {
