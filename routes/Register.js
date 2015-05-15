@@ -3,6 +3,7 @@ var async = require('async');
 var UsersCollection = require('./DbCollections.js').UsersCollection;
 var defaultConfig = require('../defaultConfig.json');
 
+
 exports.Test = function(req,res)
 {
     console.log('Rgister - GET . Time : ' + new Date());

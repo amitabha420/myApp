@@ -7,6 +7,7 @@ var express = require('express');
     LocationSearch = require('./routes/LocationSearch');
     SaveChannelContents = require('./routes/SaveChannelContents');
     Statistics = require('./routes/Statistics');
+    WebCMS = require('./routes/WebCMS');
 var app = express();
 
 
@@ -70,6 +71,13 @@ app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotSt
 //app.get('/Statistics/callstoredFunction', Statistics.callstoredFunction);
 app.post('/Statistics/lockContent', Statistics.lockContent);
 
+
+
+
+/*WebCMS API*/
+app.post('/syncspot/cloud/api/v1/webcms/getAdmins',WebCMS.getAdminsData);
+app.post('/syncspot/cloud/api/v1/webcms/getChannels',WebCMS.getChannels4Admin);
+app.post('/syncspot/cloud/api/v1/webcms/getLocations_type1',WebCMS.GetLocationsOfChannel_v1)
 
 
 //app.get('/testConfig',LocationSearch.testConfig);
