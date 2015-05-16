@@ -5,6 +5,14 @@ var mongoose = require('mongoose');
 exports.mongoose = mongoose.connect('mongodb://localhost/NewSyncSpot');
 
 var Schema = mongoose.Schema;
+ObjectId = Schema.ObjectId;
+
+var ValidateUser = new Schema({
+    "UserId" : String,//{ type: Schema.ObjectId, auto: true },
+    "CreateDate" : {type: Date, default: Date.now}
+},{collection : 'ValidateUser'});
+
+exports.ValidateUserCollection = mongoose.model('ValidateUser', ValidateUser);
 
 var UsersSchema = new Schema({
     "firstName" : String,

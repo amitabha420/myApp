@@ -40,16 +40,9 @@ app.post('/User/ChangePassword',Register.changePassword);
 
 
 
-app.post('/CreateAdminUsers',AdminUsers.Create);
+//app.post('/CreateAdminUsers',AdminUsers.Create);
 
-app.post('/GetChannels',Channels.GetChannels);
-app.post('/CreateChannel',Channels.Create);
-app.post('/EditChannel',Channels.Edit);
-app.post('/DeleteChannel',Channels.Delete);
-app.post('/DeleteGeoFenceDataForChannel',Channels.DeleteGeoFenceDataForChannel);  //not mensioned by client
-app.post('/CreateGeoLocation',Channels.CreateGeoLocation);
-app.post('/AlterDigitalcontents',Channels.EditDigitalContents);
-app.post('/addContentToChannel',Channels.addContentToChannel);  //not mensioned by client 
+
 
 app.post('/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
 app.post('/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
@@ -74,10 +67,29 @@ app.post('/Statistics/lockContent', Statistics.lockContent);
 
 
 
+//A token is valid is upto 8 hours
+//app.all('/syncspot/cloud/api/v1/webcms/*', [require('./middlewares/validateAdminRequest')]);
 /*WebCMS API*/
+app.post('/syncspot/cloud/api/v1/webcms/CreateAdminUsers',WebCMS.CreateAdminUsres);
+app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS.adminLoggin);
+app.post('/syncspot/cloud/api/v1/webcms/SuperAdminLoggin',WebCMS.SuperAdminLoggin);
 app.post('/syncspot/cloud/api/v1/webcms/getAdmins',WebCMS.getAdminsData);
 app.post('/syncspot/cloud/api/v1/webcms/getChannels',WebCMS.getChannels4Admin);
 app.post('/syncspot/cloud/api/v1/webcms/getLocations_type1',WebCMS.GetLocationsOfChannel_v1)
+app.post('/syncspot/cloud/api/v1/webcms/getLocations_type2',WebCMS.GetLocationsOfChannel_v2)
+
+app.post('/syncspot/cloud/api/v1/webcms/GetChannels',Channels.GetChannels);
+app.post('/syncspot/cloud/api/v1/webcms/CreateChannel',Channels.Create);
+app.post('/syncspot/cloud/api/v1/webcms/EditChannel',Channels.Edit);
+app.post('/syncspot/cloud/api/v1/webcms/DeleteChannel',Channels.Delete);
+app.post('/syncspot/cloud/api/v1/webcms/DeleteGeoFenceDataForChannel',Channels.DeleteGeoFenceDataForChannel);  //not mensioned by client
+app.post('/syncspot/cloud/api/v1/webcms/CreateGeoLocation',Channels.CreateGeoLocation);
+app.post('/syncspot/cloud/api/v1/webcms/AlterDigitalcontents',Channels.EditDigitalContents);
+app.post('/syncspot/cloud/api/v1/webcms/addContentToChannel',Channels.addContentToChannel);  //not mensioned by client 
+
+app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
+app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
+app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetContents',LocationSearch.GetContents);
 
 
 //app.get('/testConfig',LocationSearch.testConfig);

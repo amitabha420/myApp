@@ -3,16 +3,15 @@
   "description": "It is mobile application api",
   "version": "0.0.1",
   "private": true,
-  "scripts": 
-    { 
-      "start": "node Server.js"
-    } ,
-  
+  "scripts": {
+    "start": "node Server.js"
+  },
   "dependencies": {
-    "express": "4.8.7",
-    "body-parser": "1.7.0",
     "async": "^0.9.0",
+    "body-parser": "1.7.0",
     "email-validator": "^1.0.1",
+    "express": "4.8.7",
+    "moment": "^2.10.3",
     "mongoose": "3.8"
   }
 }
