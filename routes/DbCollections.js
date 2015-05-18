@@ -125,3 +125,13 @@ var StatSyncSpotSchema = new Schema({
 exports.StatSyncSpotSchema = mongoose.model('StatSyncSpot', StatSyncSpotSchema);
 
 
+//feed back db
+var FeedBackSchema = new Schema({
+    topic : String,
+    message : String,
+    userid:String,
+    CreateDate : {type: Date, default: Date.now}
+},{collection : 'FeedBack'});
+exports.FeedBackSchema = mongoose.model('FeedBack', FeedBackSchema);
+
+

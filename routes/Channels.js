@@ -138,7 +138,8 @@ exports.Create = function(req,res)
                                     "BannerImageUrl" : AdminUser.BannerImageUrl,
                                 };
                 AdminUserDbObject.Channel.push(newchannel);
-                       // res.send(AdminUserDbObject.Channel[2]);
+                        //res.send(AdminUserDbObject);
+                       
                         AdminUserDbObject.save(function(err,finalobj){
                             if(err)
                             {
@@ -181,9 +182,11 @@ exports.Edit = function(req,res){
     //404 : Data is not valid.
     //500 : Internal server error.
 
+    
     var AdminUser = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
     var _userid = new ObjectId(AdminUser._userid);
+
 
     adminUsersSchema.update(
                                 { _id: _userid, "Channel.ChannelName": AdminUser.ChannelName },

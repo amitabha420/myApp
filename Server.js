@@ -2,7 +2,7 @@
 var express = require('express');
     bodyParser = require('body-parser');
     Register = require('./routes/Register');
-    AdminUsers = require('./routes/AdminUsers');
+    UserFeedBack = require('./routes/UserFeedBack');
     Channels = require('./routes/Channels');
     LocationSearch = require('./routes/LocationSearch');
     SaveChannelContents = require('./routes/SaveChannelContents');
@@ -35,7 +35,7 @@ app.post('/updateRegistration',Register.updateRegistration);
 app.post('/Loggin',Register.Loggin);
 app.post('/User/getUserDetails',Register.getUserDetails);
 app.post('/User/ChangePassword',Register.changePassword);
-
+app.post('/User/FeedBack',UserFeedBack.Create);
 
 
 
@@ -78,7 +78,7 @@ app.post('/syncspot/cloud/api/v1/webcms/getChannels',WebCMS.getChannels4Admin);
 app.post('/syncspot/cloud/api/v1/webcms/getLocations_type1',WebCMS.GetLocationsOfChannel_v1)
 app.post('/syncspot/cloud/api/v1/webcms/getLocations_type2',WebCMS.GetLocationsOfChannel_v2)
 
-app.post('/syncspot/cloud/api/v1/webcms/GetChannels',Channels.GetChannels);
+//app.post('/syncspot/cloud/api/v1/webcms/GetChannels',Channels.GetChannels);
 app.post('/syncspot/cloud/api/v1/webcms/CreateChannel',Channels.Create);
 app.post('/syncspot/cloud/api/v1/webcms/EditChannel',Channels.Edit);
 app.post('/syncspot/cloud/api/v1/webcms/DeleteChannel',Channels.Delete);

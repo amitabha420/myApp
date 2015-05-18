@@ -17,12 +17,12 @@ exports.GeoLocations = function(req,res)
   var lat = parseFloat(input.lat);
   var lng = parseFloat(input.lng);
   var limit = parseInt(input.limit);
+  var distance = parseInt(input.distance);
   var coordinate = [lng,lat];
 
   //console.log(parseFloat("5.265"));
   //console.log(lat + "," + lng);
 
-  //console.log(coordinate);
   GeoLocationSchema.find(
   {
     loc : {
@@ -31,7 +31,7 @@ exports.GeoLocations = function(req,res)
           type : "Point" , 
           coordinates : coordinate  
         }, 
-        $maxDistance : 100000
+        $maxDistance : distance
       }
     }
   }

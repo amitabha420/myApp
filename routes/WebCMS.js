@@ -23,14 +23,14 @@ exports.CreateAdminUsres = function(req,res)
 
     //console.log(obj.User + ',' + obj.password);
     var adminuser = new AdminUsersSchema();
-    adminuser.User = obj.User;
+    adminuser.User = obj.user;
     adminuser.password = obj.password;
     adminuser.IsSuperAdmin = false;
     adminuser.IsApp = false ;
     adminuser.AppName = '';
 
     console.log(JSON.stringify(adminuser));
-    AdminUsersSchema.findOne({User : obj.User},
+    AdminUsersSchema.findOne({User : obj.user},
         function(err,result)
         {
             if(err)
@@ -124,17 +124,31 @@ exports.SuperAdminLoggin = function(req,res)
         {
             if(err)
             {
-                res.send({"_id" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
+                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
             }
             else
             {
+
                 if(result == null)
                 {
                     res.send({"result" : "", "StatusCode" : "202" ,"Message" : "Invalid UserName and Password"});             
                 }
                 else    
                 {
-                    res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});                 
+                    var ValidateUser = new ValidateUserCollection();
+                    ValidateUser.UserId = result._id;
+                    ValidateUser.save(function(err1,result1)
+                        {
+                            if(err1)
+                            {
+                                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
+                            }
+                            else
+                            {
+                                res.send({"result" : result,"token": result1._id, "StatusCode" : "200" ,"Message" : "OK"});                 
+                            }
+                        });
+                    //res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});                 
                 }
                 
             }
@@ -148,6 +162,14 @@ exports.getAdminsData = function(req,res)
 	var ObjectId = require('mongoose').Types.ObjectId;
 	
     AdminUsersSchema.find({"IsApp" : false,"IsSuperAdmin" : false},
+        {
+            "AppName" : 0,
+            "IsApp" : 0,
+            "IsSuperAdmin" : 0,
+            "password" : 0,
+            "__v" : 0
+            
+        },
     	function(err,result)
     	{
     		res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});		
@@ -170,7 +192,7 @@ exports.getChannels4Admin = function(req,res)
             "IsApp" : 0,
             "IsSuperAdmin" : 0,
             "password" : 0,
-            "User" : 0,
+            "__v" : 0
             
         },function(err,result)
         {
@@ -230,7 +252,7 @@ exports.GetLocationsOfChannel_v1 = function(req,res)
         "Digitalcontents" : 0,
         "Matchpoint" : 0,
         "loc" : 0,
-        
+        "__v" : 0,
     }
     ,function(err,result)
         {
@@ -262,7 +284,8 @@ exports.GetLocationsOfChannel_v2 = function(req,res)
         "ChannelId" : 0,
         "ChannelName" : 0,
         "UserId" : 0,
-        "SubscribedUsers" : 0
+        "SubscribedUsers" : 0,
+        "__v":0
         //"Digitalcontents" : 0,
         //"Matchpoint" : 0,
         //"loc" : 0,
