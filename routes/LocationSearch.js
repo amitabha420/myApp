@@ -1,4 +1,5 @@
 var GeoLocationSchema = require('./DbCollections.js').GeoLocationSchema;
+var UserContentAccessHistorySchema = require('./DbCollections.js').UserContentAccessHistorySchema;
 var async = require('async');
 
 
@@ -57,6 +58,41 @@ exports.GeoLocations = function(req,res)
       }
       else
       {
+
+        /*  Put all locations for a channel in a single object of the resulting array.
+        var finalobject = [];
+        var output = getUnique(result);
+        for (var i = 0; i <= output.length-1; i++) 
+        {
+
+            var ss = new Object();
+            ss.locations = [];
+            for (var j = 0; j <= result.length-1; j++) 
+            {
+
+              if(result[j].ChannelId == output[i])  //find same channel one by one in result and add to finalobject
+              {
+                console.log(result[j].BannerImageUrl);
+                
+                ss.BannerImageUrl = result[j].BannerImageUrl;
+                ss.ChannelId = result[j].ChannelId;
+                ss.ChannelName = result[j].ChannelName;
+
+                var loc = new Object();
+                loc._id = result[j]._id;
+                loc.Notification = result[j].Notification;
+                loc.LocationName = result[j].LocationName;
+                loc.UserId = result[j].UserId;
+                loc.Matchpoint = result[j].Matchpoint;
+                loc.loc = result[j].loc;
+
+                ss.locations.push(loc);
+              }
+              
+            };
+            finalobject.push(ss);
+        };*/
+        
         res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
       }
   }
@@ -64,6 +100,18 @@ exports.GeoLocations = function(req,res)
 
 }
 
+
+function getUnique(result){
+   var u = {}, a = [];
+   for(var i = 0, l = result.length; i < l; ++i){
+      if(u.hasOwnProperty(result[i].ChannelId)) {
+         continue;
+      }
+      a.push(result[i].ChannelId);
+      u[result[i].ChannelId] = 1;
+   }
+   return a;
+}
 
 
 /*INPUT

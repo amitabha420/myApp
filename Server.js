@@ -7,6 +7,7 @@ var express = require('express');
     LocationSearch = require('./routes/LocationSearch');
     SaveChannelContents = require('./routes/SaveChannelContents');
     Statistics = require('./routes/Statistics');
+    UserContentAccessHistory = require('./routes/UserContentAccessHistory');
     WebCMS = require('./routes/WebCMS');
 var app = express();
 
@@ -36,7 +37,7 @@ app.post('/Loggin',Register.Loggin);
 app.post('/User/getUserDetails',Register.getUserDetails);
 app.post('/User/ChangePassword',Register.changePassword);
 app.post('/User/FeedBack',UserFeedBack.Create);
-
+app.post('/User/getHistory',UserContentAccessHistory.getHistory);
 
 
 
@@ -88,8 +89,6 @@ app.post('/syncspot/cloud/api/v1/webcms/AlterDigitalcontents',Channels.EditDigit
 app.post('/syncspot/cloud/api/v1/webcms/addContentToChannel',Channels.addContentToChannel);  //not mensioned by client 
 
 app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
-app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
-app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetContents',LocationSearch.GetContents);
 
 
 //app.get('/testConfig',LocationSearch.testConfig);
