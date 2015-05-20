@@ -413,9 +413,9 @@ exports.CreateGeoLocation = function(req,res)
     var StatusCode = 200;
     var Message = "";
 
+
     var ObjectId = require('mongoose').Types.ObjectId;
     var _userid = new ObjectId(RequestData._userid);
-    console.log('CreateGeoLocation');
 
     var LocationObject = new GeoLocationSchema();
     LocationObject.UserId = RequestData._userid;
@@ -479,8 +479,6 @@ exports.CreateGeoLocation = function(req,res)
     //500 : Internal server error.
     
     
-    console.log( _userid);
-    console.log(RequestData.ChannelName);
     async.series([
         function(callback){
             //Location name duplication checking
@@ -561,13 +559,14 @@ exports.CreateGeoLocation = function(req,res)
             }
             else
             {
-                //res.send(AdminUserDbObject);
-                
+                //res.send(LocationObject);
+                //console.log(LocationObject);
                 
                 LocationObject.save(function(err,obj)
                     {
                         if(err)
                         {
+                            console.log(err);
                             StatusCode = 500;
                             Message = "Internal server error";
                             res.send({"_locationid" : err, "StatusCode" : StatusCode ,"Message" : Message});

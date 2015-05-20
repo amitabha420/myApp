@@ -102,6 +102,8 @@ exports.UserSavedContentsSchema = mongoose.model('UserSavedContents',UserSavedCo
 var StatContentAccessSchema = new Schema({
     userid : String,
     channeladminid :String,
+    channelid : String,
+    contentImageUrl :String,
     locationid : String,
     contenturl : String,
     contentName : String,

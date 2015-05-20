@@ -10,7 +10,9 @@ exports.getHistory = function (req,res)
     	 contentid : "contentid",
          contentName: "contentName",
          contenturl : "contenturl",
-         CreateDate : "CreateDate"
+         CreateDate : "CreateDate",
+         channelid : "channelid",
+         contentImageUrl : "contentImageUrl"
     })
     .sort({"CreateDate": -1})
     .limit(50)
