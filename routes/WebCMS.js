@@ -29,8 +29,10 @@ exports.CreateAdminUsres = function(req,res)
     adminuser.IsApp = false ;
     adminuser.AppName = '';
 
-    console.log(JSON.stringify(adminuser));
-    AdminUsersSchema.findOne({User : obj.user},
+    
+    var serchtext = new RegExp(adminuser.User, "i");
+    
+    AdminUsersSchema.findOne({User : serchtext},
         function(err,result)
         {
             if(err)
@@ -41,12 +43,13 @@ exports.CreateAdminUsres = function(req,res)
             {
                 if(result == null)
                 {
+                    //console.log(JSON.stringify(result));
                     adminuser.save(function (err, obj) 
                     {
                         if (err) 
                         {
-                            console.log(err);// ...
-                            res.send({"_id" : "" , "StatusCode" : "500","Message" : "Internal server error"});
+                            //console.log(err);// ...
+                            res.send({"_id" : err , "StatusCode" : "500","Message" : "Internal server error"});
                         }
 
                         var responseObj = {"_id" : obj._id , "StatusCode" : "200", "Message" : "OK"};
@@ -74,7 +77,8 @@ exports.adminLoggin = function(req,res)
 
     var obj = req.body;
 
-    AdminUsersSchema.findOne({User : obj.user,password : obj.password, IsSuperAdmin : false, IsApp : false},
+    var _user = new RegExp(obj.user, "i");
+    AdminUsersSchema.findOne({User : _user,password : obj.password, IsSuperAdmin : false, IsApp : false},
         {
             _id : 1
         },
@@ -116,7 +120,8 @@ exports.SuperAdminLoggin = function(req,res)
 {
     var obj = req.body;
 
-    AdminUsersSchema.findOne({User : obj.user,password : obj.password, IsSuperAdmin : true, IsApp : false},
+    var _user = new RegExp(obj.user, "i");
+    AdminUsersSchema.findOne({User : _user,password : obj.password, IsSuperAdmin : true, IsApp : false},
         {
             _id : 1
         },

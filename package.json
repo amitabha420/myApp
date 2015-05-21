@@ -11,6 +11,7 @@
     "body-parser": "1.7.0",
     "email-validator": "^1.0.1",
     "express": "4.8.7",
+    "forever": "^0.14.1",
     "moment": "^2.10.3",
     "mongoose": "3.8"
   }

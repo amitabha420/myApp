@@ -94,7 +94,7 @@ exports.Create = function(req,res)
                     	{
                     		 for(var i=0;i<obj.Channel.length;i++)
                     		  {
-        						if (obj.Channel[i].ChannelName === AdminUser.ChannelName)
+        						if (obj.Channel[i].ChannelName.toLowerCase() === AdminUser.ChannelName.toLowerCase())
         						{
                                     StatusCode = 201;
                                     Message = "Channel already exists for the user.";
@@ -188,8 +188,9 @@ exports.Edit = function(req,res){
     var _userid = new ObjectId(AdminUser._userid);
 
 
+    var serchtext = new RegExp(AdminUser.ChannelName, "i");
     adminUsersSchema.update(
-                                { _id: _userid, "Channel.ChannelName": AdminUser.ChannelName },
+                                { _id: _userid, "Channel.ChannelName": serchtext },
                                        { $set: { 
                                                 "Channel.$.ChannelDescription" : AdminUser.ChannelDescription ,
                                                 "Channel.$.BannerImageUrl" : AdminUser.BannerImageUrl,
@@ -238,44 +239,54 @@ exports.Delete = function(req,res)
     var ObjectId = require('mongoose').Types.ObjectId;
     var _userid = new ObjectId(AdminUser._userid);
 
-    adminUsersSchema.findOne({ _id: _userid, "Channel.ChannelName": AdminUser.ChannelName }, function(err,obj) 
-    {
-        var channelindex = -1;
-        for (var i = 0; i < obj.Channel.length ; i++) 
-        {
-            var channel = obj.Channel[i];
-            if(channel.ChannelName == AdminUser.ChannelName)    
-            {
-                channelindex = i;
-                break;
-            }
-        }
-        if(channelindex != -1)
-        {
-            obj.Channel.splice(channelindex,1);    
+    var serchtext = new RegExp(AdminUser.ChannelName, "i");
 
-            obj.save(function(error,result)
-            {
-                if(error)
-                {
-                    res.send({"StatusCode" : StatusCode ,"500" : "Internal server error"});
-                }
-                else
-                {
-                    //also dele the geo locations of that channel if exists
-                    GeoLocationSchema.remove({UserId : AdminUser._userid,ChannelName : AdminUser.ChannelName},
-                        function(e,r)
+    adminUsersSchema.findOne({ _id: _userid, "Channel.ChannelName": serchtext }, function(err,obj) 
+    {
+        if(obj!=null)
+        {
+            var channelindex = -1;
+                    for (var i = 0; i < obj.Channel.length ; i++) 
+                    {
+                        var channel = obj.Channel[i];
+                        if(channel.ChannelName.toLowerCase() == AdminUser.ChannelName.toLowerCase())    
                         {
-                            console.log(r);
+                            channelindex = i;
+                            break;
+                        }
+                    }
+                    if(channelindex != -1)
+                    {
+                        obj.Channel.splice(channelindex,1);    
+
+                        obj.save(function(error,result)
+                        {
+                            if(error)
+                            {
+                                res.send({"StatusCode" : StatusCode ,"500" : "Internal server error"});
+                            }
+                            else
+                            {
+                                //also dele the geo locations of that channel if exists
+                                GeoLocationSchema.remove({UserId : AdminUser._userid,ChannelName : AdminUser.ChannelName},
+                                    function(e,r)
+                                    {
+                                        console.log(r);
+                                    });
+                                res.send({"StatusCode" : "200" ,"Message" : "OK"});
+                            }
                         });
-                    res.send({"StatusCode" : "200" ,"Message" : "OK"});
-                }
-            });
+                    }
+                    else
+                    {
+                        res.send({"StatusCode" : "422" ,"Message" : "Invalid entity"});                            
+                    }
         }
         else
         {
-            res.send({"StatusCode" : "422" ,"Message" : "Unprocessable entity"});                            
+            res.send({"StatusCode" : "422" ,"Message" : "Invalid entity"});                            
         }
+        
         
     });
 }
