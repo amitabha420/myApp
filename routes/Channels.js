@@ -314,7 +314,9 @@ exports.DeleteGeoFenceDataForChannel = function(req,res)
     var ObjectId = require('mongoose').Types.ObjectId;
     //var _userid = new ObjectId(AdminUser._userid);
 
-    GeoLocationSchema.remove({UserId : input._userid,ChannelName : input.ChannelName},
+    var serchtext = new RegExp(input.ChannelName, "i");
+
+    GeoLocationSchema.remove({UserId : input._userid,ChannelName : serchtext},
         function(error,result)
         {
              if(error)
@@ -490,10 +492,13 @@ exports.CreateGeoLocation = function(req,res)
     //500 : Internal server error.
     
     
+    var serchtextChannel = new RegExp(RequestData.ChannelName, "i");
+    var serachtextLocation = new RegExp(RequestData.LocationName ,"i");
+
     async.series([
         function(callback){
             //Location name duplication checking
-            GeoLocationSchema.findOne({UserId : RequestData._userid, ChannelName : RequestData.ChannelName, LocationName : RequestData.LocationName},
+            GeoLocationSchema.findOne({UserId : RequestData._userid, ChannelName : serchtextChannel, LocationName : serachtextLocation},
                 function(err,res)
                 {
                     if(err)
@@ -531,7 +536,7 @@ exports.CreateGeoLocation = function(req,res)
                         
                         for(var i=0;i<obj.Channel.length;i++)
                         {
-                            if (obj.Channel[i].ChannelName === RequestData.ChannelName)
+                            if (obj.Channel[i].ChannelName.toLowerCase() === RequestData.ChannelName.toLowerCase())
                             {
                                 LocationObject.ChannelId = obj.Channel[i]._id;
                                 LocationObject.BannerImageUrl = obj.Channel[i].BannerImageUrl;

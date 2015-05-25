@@ -38,6 +38,8 @@ app.post('/User/getUserDetails',Register.getUserDetails);
 app.post('/User/ChangePassword',Register.changePassword);
 app.post('/User/FeedBack',UserFeedBack.Create);
 app.post('/User/getHistory',UserContentAccessHistory.getHistory);
+app.post('/User/clearHistory',UserContentAccessHistory.clearHistory);
+
 
 
 
@@ -52,6 +54,7 @@ app.post('/DigitalContents/GetContents',LocationSearch.GetContents);
 
 app.post('/User/SaveContent',SaveChannelContents.SAVEChannelContent4User);
 app.post('/User/GetContent',SaveChannelContents.GetChannelContent4User);
+app.post('/User/ClearSavedSyncSpots',SaveChannelContents.ClearChannelContent4User);
 
 
 app.post('/Statistics/WriteAccess',Statistics.EnlistContentAccess);
