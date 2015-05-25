@@ -44,8 +44,6 @@ exports.clearHistory = function(req,res)
        function(err,obj)
        {
 
-            console.log(err);
-            console.log(obj);
             if(err)
                 res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});
             else
