@@ -294,7 +294,7 @@ exports.Loggin = function (req, res) {
                     else
                     {
                         response.StatusCode = 404;
-                        response.Message = 'Invalid loggin credential';
+                        response.Message = 'Invalid Login credential';
                     }
                 }
                 
