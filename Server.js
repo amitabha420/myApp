@@ -75,8 +75,10 @@ app.post('/Statistics/lockContent', Statistics.lockContent);
 //app.all('/syncspot/cloud/api/v1/webcms/*', [require('./middlewares/validateAdminRequest')]);
 /*WebCMS API*/
 app.post('/syncspot/cloud/api/v1/webcms/CreateAdminUsers',WebCMS.CreateAdminUsres);
-app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS.adminLoggin);
-app.post('/syncspot/cloud/api/v1/webcms/SuperAdminLoggin',WebCMS.SuperAdminLoggin);
+app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS._Login);
+//app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS.adminLoggin);
+//app.post('/syncspot/cloud/api/v1/webcms/SuperAdminLoggin',WebCMS.SuperAdminLoggin);
+
 app.post('/syncspot/cloud/api/v1/webcms/getAdmins',WebCMS.getAdminsData);
 app.post('/syncspot/cloud/api/v1/webcms/getChannels',WebCMS.getChannels4Admin);
 app.post('/syncspot/cloud/api/v1/webcms/getLocations_type1',WebCMS.GetLocationsOfChannel_v1)

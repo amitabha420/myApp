@@ -71,7 +71,58 @@ exports.CreateAdminUsres = function(req,res)
   "password" : "syncspot"
 }
 */
+//admin and superadmin login is integrated in same function
+exports._Login = function(req,res)
+{
+    //res.send('ok');
 
+    
+    var obj = req.body;
+
+    var _user = new RegExp(obj.user, "i");
+    AdminUsersSchema.findOne({User : _user,password : obj.password, IsApp : false},
+        {
+            _id : 1,
+            IsSuperAdmin : 1,
+            Channel : 1
+        },
+        function(err,result)
+        {
+            if(err)
+            {
+                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
+            }
+            else
+            {
+                
+                if(result == null)
+                {
+                    res.send({"result" : "", "StatusCode" : "202" ,"Message" : "Invalid UserName and Password"});             
+                }
+                else    
+                {
+                    var ValidateUser = new ValidateUserCollection();
+                    ValidateUser.UserId = result._id;
+                    ValidateUser.save(function(err1,result1)
+                        {
+                            if(err1)
+                            {
+                                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
+                            }
+                            else
+                            {
+                                res.send({"result" : result,"token": result1._id, "StatusCode" : "200" ,"Message" : "OK"});                 
+                            }
+                        });
+                    //res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});                 
+                }
+                
+                
+            }
+        });
+}
+
+/*
 exports.adminLoggin = function(req,res)
 {
 
@@ -159,6 +210,8 @@ exports.SuperAdminLoggin = function(req,res)
             }
         });   
 }
+*/
+
 
 /*No Imput needed*/
 exports.getAdminsData = function(req,res)
