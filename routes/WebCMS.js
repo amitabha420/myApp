@@ -362,3 +362,110 @@ exports.GetLocationsOfChannel_v2 = function(req,res)
         }
     );
 }
+
+
+
+/*
+{
+  "fromDate" : ["2015","5","28"],
+  "toDate" : ["2015","5","8"],
+  "contentid" : "552fc6fb8a5ec0b0060bf3b1"
+}
+*/
+//get a content stats between 2 date range
+exports.GetContentWiseStats_v1 = function(req,res)
+{
+
+    var input = req.body;
+    var _fromDate = input.fromDate;
+    var _toDate = input.toDate;
+    //console.log(input);
+
+    var fromDate = new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1]) - 1,parseInt(_fromDate[2]));
+    var toDate = new Date(parseInt(_toDate[0]),parseInt(_toDate[1]) - 1,parseInt(_toDate[2]));
+    //console.log(fromDate);
+    //console.log(toDate);
+
+    StatContentAccessSchema.aggregate(
+        [{
+                $match :{
+                            contentid : input.contentid,
+                            CreateDate : {$gte :toDate, $lte : fromDate }
+                        }
+               
+       },
+           {"$project" : {  
+                "contentid" : "$contentid",
+                   
+               "date" : "$CreateDate",  
+               "_id" : 0,  
+               "h" : {  
+                    "$hour" : "$CreateDate"  
+               },  
+               "m" : {  
+                    "$minute" : "$CreateDate"  
+               },  
+               "s" : {  
+                    "$second" : "$CreateDate"  
+               },  
+               "ml" : {  
+                    "$millisecond" : "$CreateDate"  
+               }  
+          }
+    },
+    {"$project" : {     
+                
+                    "contentid" : "$contentid",
+               "date" : {      
+                    "$subtract" : [      
+                         "$date",      
+                         {      
+                              "$add" : [      
+                                   "$ml",      
+                                   {      
+                                        "$multiply" : [      
+                                             "$s",      
+                                             1000      
+                                        ]      
+                                   },      
+                                   {      
+                                        "$multiply" : [      
+                                             "$m",      
+                                             60,      
+                                             1000      
+                                        ]      
+                                   },      
+                                   {      
+                                        "$multiply" : [      
+                                             "$h",      
+                                             60,      
+                                             60,      
+                                             1000      
+                                        ]      
+                                   }      
+                              ]      
+                         }      
+                    ]      
+               }      
+          }      
+     },   
+           
+           {
+           $group:{ 
+                       _id: 
+                            {
+                                contentid : "$contentid", date : "$date"  
+                            },
+                       count : {$sum : 1}
+               }
+           }
+           ],
+           function(error,result)
+           {
+                if(error)
+                    res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
+                else
+                    res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});      
+           });
+
+}

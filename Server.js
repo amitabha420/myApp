@@ -75,7 +75,7 @@ app.post('/Statistics/lockContent', Statistics.lockContent);
 //app.all('/syncspot/cloud/api/v1/webcms/*', [require('./middlewares/validateAdminRequest')]);
 /*WebCMS API*/
 app.post('/syncspot/cloud/api/v1/webcms/CreateAdminUsers',WebCMS.CreateAdminUsres);
-app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS._Login);
+app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS._Login); //admin and super admin login is integrated 
 //app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS.adminLoggin);
 //app.post('/syncspot/cloud/api/v1/webcms/SuperAdminLoggin',WebCMS.SuperAdminLoggin);
 
@@ -94,6 +94,7 @@ app.post('/syncspot/cloud/api/v1/webcms/AlterDigitalcontents',Channels.EditDigit
 app.post('/syncspot/cloud/api/v1/webcms/addContentToChannel',Channels.addContentToChannel);  //not mensioned by client 
 
 app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
+app.post('/syncspot/cloud/api/v1/webcms/Statistics/GetContentsStatinDateRange',WebCMS.GetContentWiseStats_v1);
 
 
 //app.get('/testConfig',LocationSearch.testConfig);
