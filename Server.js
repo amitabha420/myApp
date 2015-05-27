@@ -77,6 +77,8 @@ app.post('/Statistics/lockContent', Statistics.lockContent);
 app.post('/syncspot/cloud/api/v1/webcms/CreateAdminUsers',WebCMS.CreateAdminUsres);
 app.post('/syncspot/cloud/api/v1/webcms/UpdateAdminUsres',WebCMS.UpdateAdminUsres);
 app.post('/syncspot/cloud/api/v1/webcms/GetChannelAdminByID',WebCMS.GetChannelAdminByID);
+app.post('/syncspot/cloud/api/v1/webcms/DeleteChannelAdminbyID',WebCMS.DeleteChannelAdminbyID);
+
 app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS._Login); //admin and super admin login is integrated 
 
 

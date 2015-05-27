@@ -128,7 +128,18 @@ exports.DeleteChannelAdminbyID = function(req,res)
                 }
                 else
                 {
-                    res.send({"StatusCode" : "200" ,"Message" : "OK"});                 
+                    GeoLocationCollection.remove({UserId : obj._id },
+                        function(e1,r1)
+                        {
+                            if(e1)
+                            {
+                                res.send({"StatusCode" : "500","Message" : "Internal server error"});  
+                            }
+                            else
+                            {
+                                res.send({"StatusCode" : "200" ,"Message" : "OK"});  
+                            }
+                        });
                 }
     })
 }
