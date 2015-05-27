@@ -264,6 +264,8 @@ exports.Loggin = function (req, res) {
         email : '',
         gender : '',
         age: '',
+        firstname : '',
+        lastname : '',
         profiletype: 'manual',
         token : '',
         _id : ''
@@ -290,6 +292,8 @@ exports.Loggin = function (req, res) {
                         response.age = obj.age;
                         response.profiletype = obj.profiletype;
                         response._id = obj._id;
+                        response.firstname = obj.firstName;
+                        response.lastname = obj.lastName;
                     }
                     else
                     {
