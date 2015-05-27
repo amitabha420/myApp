@@ -84,6 +84,7 @@ app.post('/syncspot/cloud/api/v1/webcms/getAdmins',WebCMS.getAdminsData);
 app.post('/syncspot/cloud/api/v1/webcms/getChannels',WebCMS.getChannels4Admin);
 app.post('/syncspot/cloud/api/v1/webcms/getLocations_type1',WebCMS.GetLocationsOfChannel_v1)
 app.post('/syncspot/cloud/api/v1/webcms/getLocations_type2',WebCMS.GetLocationsOfChannel_v2)
+app.post('/syncspot/cloud/api/v1/webcms/getLocationDetailsByLocationId',WebCMS.getLocationDetailsByLocationId);
 
 //app.post('/syncspot/cloud/api/v1/webcms/GetChannels',Channels.GetChannels);
 app.post('/syncspot/cloud/api/v1/webcms/CreateChannel',Channels.Create);

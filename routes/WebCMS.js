@@ -351,6 +351,38 @@ exports.GetLocationsOfChannel_v2 = function(req,res)
 }
 
 
+/*
+{
+    "_id" : "553f2da982d5f2ac1618ad78"
+}
+*/
+exports.getLocationDetailsByLocationId =function(req,res)
+{
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    GeoLocationCollection.findOne({"_id" : input._id},
+    {
+        
+        "ChannelId" : 0,
+        "ChannelName" : 0,
+        "UserId" : 0,
+        "SubscribedUsers" : 0,
+        "__v":0
+    }
+    ,function(err,result)
+        {
+            if(err)
+            {
+                res.status(200).send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});             
+            }
+            else
+            {
+                res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});             
+            }
+        }
+    );
+}
+
 
 /*
 {
