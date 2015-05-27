@@ -115,6 +115,24 @@ exports.UpdateAdminUsres = function(req,res)
 }
 
 
+exports.DeleteChannelAdminbyID = function(req,res)
+{
+    var obj = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+
+    AdminUsersSchema.remove({_id : ObjectId(obj._id)},function(e,r)
+    {
+        if(e)
+                {
+                    res.send({"StatusCode" : "500","Message" : "Internal server error"});    
+                }
+                else
+                {
+                    res.send({"StatusCode" : "200" ,"Message" : "OK"});                 
+                }
+    })
+}
+
 /*
 INPUT
 { 
@@ -160,7 +178,11 @@ exports._Login = function(req,res)
         {
             _id : 1,
             IsSuperAdmin : 1,
-            Channel : 1
+            Channel : 1,
+            firstName : 1,
+            lastName : 1,
+            address : 1,
+
         },
         function(err,result)
         {
