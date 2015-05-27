@@ -35,6 +35,9 @@ var AdminUsersSchema = new Schema({
     "IsSuperAdmin" : Boolean,
     "IsApp" :Boolean,
     "AppName" : String,
+    "firstName" : String,
+    "lastName" : String,
+    "address" : String,
     "Channel" : 
     			[
     				{

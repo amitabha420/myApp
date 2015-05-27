@@ -12,8 +12,11 @@ var defaultConfig = require('../defaultConfig.json');
 /*Create Admin Users*/
 /*
     {
-      "User" : "syncspot2",
-      "password" : "syncspot1"
+      "user" : "syncspot2",
+      "password" : "syncspot1",
+      "firstName" : "",
+      "lastName" : "",
+      "address" : ""
     }
 */
 
@@ -28,6 +31,9 @@ exports.CreateAdminUsres = function(req,res)
     adminuser.IsSuperAdmin = false;
     adminuser.IsApp = false ;
     adminuser.AppName = '';
+    adminuser.firstName = obj.firstName;
+    adminuser.lastName = obj.lastName;
+    adminuser.address = obj.address;
 
     
     var serchtext = new RegExp(adminuser.User, "i");
@@ -61,6 +67,76 @@ exports.CreateAdminUsres = function(req,res)
                     res.send({"_id" : "" , "StatusCode" : "203","Message" : "UserName is not available"});           
                 }
             }
+        });
+}
+
+
+/*Update Admin Users*/
+/*
+    {
+      "_id" : "dsadadaassad",
+      "firstName" : "",
+      "lastName" : "",
+      "address" : ""
+    }
+*/
+exports.UpdateAdminUsres = function(req,res)
+{
+    var obj = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+
+    AdminUsersSchema.update({_id : ObjectId(obj._id)},
+                             {
+                                $set : {
+                                           //"password" :  obj.password,
+                                           "firstName" : obj.firstName,
+                                           "lastName" : obj.lastName,
+                                           "address" : obj.address,
+                                       }
+                             }
+                            ).exec(function(e,r)
+                            {
+                                if(e)
+                                        {
+                                            res.send({ "StatusCode" : 500 ,"Message" : "Internal server error"});
+                                        }
+                                        else
+                                        {
+                                            if(r == 1)
+                                            {
+                                                res.send({"StatusCode" : 200 ,"Message" : "OK"});
+                                            }
+                                            else
+                                            {
+                                                res.send({"StatusCode" : 404 ,"Message" : "Data is not valid"});
+                                            }    
+                                        }
+                            });
+}
+
+
+/*
+INPUT
+{ 
+  "_id" : "55656eeca8523ee413960f50"
+}
+*/
+exports.GetChannelAdminByID = function(req,res)
+{
+    var obj = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+
+    AdminUsersSchema.findOne({_id : ObjectId(obj._id)},
+        function(e,r)
+        {
+            if(e)
+                {
+                    res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
+                }
+                else
+                {
+                    res.send({"result" : r, "StatusCode" : "200" ,"Message" : "OK"});                 
+                }
         });
 }
 
@@ -122,95 +198,6 @@ exports._Login = function(req,res)
         });
 }
 
-/*
-exports.adminLoggin = function(req,res)
-{
-
-    var obj = req.body;
-
-    var _user = new RegExp(obj.user, "i");
-    AdminUsersSchema.findOne({User : _user,password : obj.password, IsSuperAdmin : false, IsApp : false},
-        {
-            _id : 1
-        },
-        function(err,result)
-        {
-            if(err)
-            {
-                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
-            }
-            else
-            {
-                if(result == null)
-                {
-                    res.send({"result" : "", "StatusCode" : "202" ,"Message" : "Invalid UserName and Password"});             
-                }
-                else    
-                {
-                    var ValidateUser = new ValidateUserCollection();
-                    ValidateUser.UserId = result._id;
-                    ValidateUser.save(function(err1,result1)
-                        {
-                            if(err1)
-                            {
-                                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
-                            }
-                            else
-                            {
-                                res.send({"result" : result,"token": result1._id, "StatusCode" : "200" ,"Message" : "OK"});                 
-                            }
-                        });
-                    //res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});                 
-                }
-                
-            }
-        });
-}
-
-exports.SuperAdminLoggin = function(req,res)
-{
-    var obj = req.body;
-
-    var _user = new RegExp(obj.user, "i");
-    AdminUsersSchema.findOne({User : _user,password : obj.password, IsSuperAdmin : true, IsApp : false},
-        {
-            _id : 1
-        },
-        function(err,result)
-        {
-            if(err)
-            {
-                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
-            }
-            else
-            {
-
-                if(result == null)
-                {
-                    res.send({"result" : "", "StatusCode" : "202" ,"Message" : "Invalid UserName and Password"});             
-                }
-                else    
-                {
-                    var ValidateUser = new ValidateUserCollection();
-                    ValidateUser.UserId = result._id;
-                    ValidateUser.save(function(err1,result1)
-                        {
-                            if(err1)
-                            {
-                                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
-                            }
-                            else
-                            {
-                                res.send({"result" : result,"token": result1._id, "StatusCode" : "200" ,"Message" : "OK"});                 
-                            }
-                        });
-                    //res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});                 
-                }
-                
-            }
-        });   
-}
-*/
 
 
 /*No Imput needed*/

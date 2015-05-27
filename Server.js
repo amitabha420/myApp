@@ -75,9 +75,10 @@ app.post('/Statistics/lockContent', Statistics.lockContent);
 //app.all('/syncspot/cloud/api/v1/webcms/*', [require('./middlewares/validateAdminRequest')]);
 /*WebCMS API*/
 app.post('/syncspot/cloud/api/v1/webcms/CreateAdminUsers',WebCMS.CreateAdminUsres);
+app.post('/syncspot/cloud/api/v1/webcms/UpdateAdminUsres',WebCMS.UpdateAdminUsres);
+app.post('/syncspot/cloud/api/v1/webcms/GetChannelAdminByID',WebCMS.GetChannelAdminByID);
 app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS._Login); //admin and super admin login is integrated 
-//app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS.adminLoggin);
-//app.post('/syncspot/cloud/api/v1/webcms/SuperAdminLoggin',WebCMS.SuperAdminLoggin);
+
 
 app.post('/syncspot/cloud/api/v1/webcms/getAdmins',WebCMS.getAdminsData);
 app.post('/syncspot/cloud/api/v1/webcms/getChannels',WebCMS.getChannels4Admin);
