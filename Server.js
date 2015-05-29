@@ -14,21 +14,40 @@ var app = express();
 
 app.use(bodyParser.json({limit: '10mb'}))
    .use(bodyParser.urlencoded({limit: '10mb', extended: true}));
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({extended: true}));
-//app.use(express.bodyParser({limit: '10mb'}));
- 
- /*
-app.configure(function () {
-    app.use(express.logger('dev'));     // 'default', 'short', 'tiny', 'dev'
-    app.use(express.bodyParser());
-});*/
+
  
 
 /*static elements*/
 app.use('/gcloud/syncspot/static/img',express.static("static" + "/img"));
 
 /*end static elements*/
+
+/*
+var domain = require('domain');
+var reqDomain = domain.create();
+
+reqDomain.on(err, function(error)
+  {
+    console.log('amitabha');
+  });
+
+reqDomain.run(function() {
+  app = express();
+  app.listen(3000);
+});*/
+
+/*
+    app.use(function(err,req, res, next){
+      console.log('in domain');
+        console.log(req);
+        reqDomain.add(req);
+        reqDomain.add(res);
+        reqDomain.on(err, function(error)
+          {
+            console.log('amitabha');
+          });
+        reqDomain.run(next);
+    });*/
  
 app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
@@ -39,12 +58,6 @@ app.post('/User/ChangePassword',Register.changePassword);
 app.post('/User/FeedBack',UserFeedBack.Create);
 app.post('/User/getHistory',UserContentAccessHistory.getHistory);
 app.post('/User/clearHistory',UserContentAccessHistory.clearHistory);
-
-
-
-
-//app.post('/CreateAdminUsers',AdminUsers.Create);
-
 
 
 app.post('/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
@@ -81,7 +94,6 @@ app.post('/syncspot/cloud/api/v1/webcms/DeleteChannelAdminbyID',WebCMS.DeleteCha
 
 app.post('/syncspot/cloud/api/v1/webcms/adminLoggin',WebCMS._Login); //admin and super admin login is integrated 
 
-
 app.post('/syncspot/cloud/api/v1/webcms/getAdmins',WebCMS.getAdminsData);
 app.post('/syncspot/cloud/api/v1/webcms/getChannels',WebCMS.getChannels4Admin);
 app.post('/syncspot/cloud/api/v1/webcms/getLocations_type1',WebCMS.GetLocationsOfChannel_v1)
@@ -101,13 +113,9 @@ app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetLocationContents',Loc
 app.post('/syncspot/cloud/api/v1/webcms/Statistics/GetContentsStatinDateRange',WebCMS.GetContentWiseStats_v1);
 
 
-//app.get('/testConfig',LocationSearch.testConfig);
-/*app.get('/testConfig',function(req,res)
-  {
-    var s = require('./defaultConfig.json');
-    res.send(s.channeldefaultbanner);
-    //res.send('ok');
-  });*/
+
+
+
 app.listen(3000);
 console.log('Listening on port 3000...');
 

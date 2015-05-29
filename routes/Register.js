@@ -122,7 +122,7 @@ exports.Register = function (req, res)
                     }
                     else
                     {
-                        var responseObj = {"_id" : obj._id , "StatusCode" : "200", "Message" : "Congratulations! You have successfully registered with SyncSpot."};
+                        var responseObj = {"_id" : obj._id ,"password" : obj.password, "StatusCode" : "200", "Message" : "Congratulations! You have successfully registered with SyncSpot."};
                         res.status(200).send(responseObj);    
                     }
                 });
@@ -264,6 +264,7 @@ exports.Loggin = function (req, res) {
         email : '',
         gender : '',
         age: '',
+        password : '',
         firstname : '',
         lastname : '',
         profiletype: 'manual',
@@ -294,6 +295,7 @@ exports.Loggin = function (req, res) {
                         response._id = obj._id;
                         response.firstname = obj.firstName;
                         response.lastname = obj.lastName;
+                        response.password = obj.password;
                     }
                     else
                     {
