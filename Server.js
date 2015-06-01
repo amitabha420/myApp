@@ -22,32 +22,6 @@ app.use('/gcloud/syncspot/static/img',express.static("static" + "/img"));
 
 /*end static elements*/
 
-/*
-var domain = require('domain');
-var reqDomain = domain.create();
-
-reqDomain.on(err, function(error)
-  {
-    console.log('amitabha');
-  });
-
-reqDomain.run(function() {
-  app = express();
-  app.listen(3000);
-});*/
-
-/*
-    app.use(function(err,req, res, next){
-      console.log('in domain');
-        console.log(req);
-        reqDomain.add(req);
-        reqDomain.add(res);
-        reqDomain.on(err, function(error)
-          {
-            console.log('amitabha');
-          });
-        reqDomain.run(next);
-    });*/
  
 app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
@@ -85,7 +59,7 @@ app.post('/Statistics/lockContent', Statistics.lockContent);
 
 
 //A token is valid is upto 8 hours
-//app.all('/syncspot/cloud/api/v1/webcms/*', [require('./middlewares/validateAdminRequest')]);
+app.all('/syncspot/cloud/api/v1/webcms/*', [require('./middlewares/validateAdminRequest')]);
 /*WebCMS API*/
 app.post('/syncspot/cloud/api/v1/webcms/CreateAdminUsers',WebCMS.CreateAdminUsres);
 app.post('/syncspot/cloud/api/v1/webcms/UpdateAdminUsres',WebCMS.UpdateAdminUsres);
@@ -114,6 +88,29 @@ app.post('/syncspot/cloud/api/v1/webcms/Statistics/GetContentsStatinDateRange',W
 
 
 
+
+// more middleware (executes after routes)
+app.use(function(req, res, next) {
+  //console.log('middleware');
+});
+
+// error handling middleware
+app.use(function(err, req, res, next) {
+
+  if(err)
+  {
+    //console.log(req.body);
+    //console.log(req.route.path);
+    //console.log(JSON.stringify(err[0]));
+    res.status(500).send({"StatusCode" : "500" ,"Message" : err.message});
+  }
+  
+  /*
+  res.render('error', {
+        message: err.message,
+        error: err
+    });*/
+});
 
 
 app.listen(3000);

@@ -18,24 +18,21 @@ module.exports = function(req, res, next) {
 
   //need to comment this console
   console.log(lastPart);
-  if((lastPart === 'adminloggin') || 
-    (lastPart === 'superadminloggin'))
+  if((lastPart === 'adminloggin') || (lastPart === 'superadminloggin'))
   {
      next(); // To move to next middleware
   }
   else
   {
-    if(ObjectId.isValid(token)!= true)
-    {
-      res.status(422);
-      res.json({
-                "StatusCode": 422,
-                "Message": "Unprocessable Entity"
-              });
-    }
-    else
-    {
-        ValidateUserCollection.findOne({_id : ObjectId(token) },function(err,result){
+    
+      var jwt = require('jwt-simple'); //--
+      var defaultConfig = require('../defaultConfig.json');
+
+      
+        var decoded = jwt.decode(token, defaultConfig.jwtTokenSecret);
+        console.log(decoded.iss);
+
+        ValidateUserCollection.findOne({_id : ObjectId(decoded.iss) },function(err,result){
         if(err)
         {
           res.status(500);
@@ -61,10 +58,14 @@ module.exports = function(req, res, next) {
               }
             next(); // To move to next middleware
           }
-        }
-      });
-    }
+        } 
+      }); 
      
-  }
+    //}
   
+  }
+
 }
+     
+
+    

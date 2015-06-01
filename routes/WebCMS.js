@@ -5,6 +5,8 @@ var GeoLocationCollection = require('./DbCollections.js').GeoLocationSchema;
 var StatContentAccessSchema = require('./DbCollections.js').StatContentAccessSchema;
 var ValidateUserCollection = require('./DbCollections.js').ValidateUserCollection;
 var async = require('async');
+var jwt = require('jwt-simple'); //--
+var moment = require('moment');  //--
 
 var defaultConfig = require('../defaultConfig.json');
 
@@ -210,6 +212,10 @@ exports._Login = function(req,res)
                 }
                 else    
                 {
+                    
+
+                    //res.send({"result" : result,"token": token, "StatusCode" : "200" ,"Message" : "OK"});
+                    
                     var ValidateUser = new ValidateUserCollection();
                     ValidateUser.UserId = result._id;
                     ValidateUser.save(function(err1,result1)
@@ -220,7 +226,15 @@ exports._Login = function(req,res)
                             }
                             else
                             {
-                                res.send({"result" : result,"token": result1._id, "StatusCode" : "200" ,"Message" : "OK"});                 
+                                console.log(result1._id);
+                                var defaultConfig = require('../defaultConfig.json');
+                                var expires = moment().add(8,'hours').valueOf();
+                                var token = jwt.encode({
+                                  iss: result1._id,
+                                  exp: expires
+                                }, defaultConfig.jwtTokenSecret);
+
+                                res.send({"result" : result,"token": token, "StatusCode" : "200" ,"Message" : "OK"});                 
                             }
                         });
                     //res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});                 

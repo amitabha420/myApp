@@ -2,5 +2,6 @@
 	"channeldefaultbanner" : "http://syncspot.net/wp-content/uploads/2014/12/SyncSpot-Logo-V2.png",
 	"contentdefaultbanner" : "http://syncspot.net/wp-content/uploads/2014/12/SyncSpot-Logo-V2.png",
 	"baseIp" : "http://104.154.79.51:3000/",
-	"staticImagePath" : "gcloud/syncspot/static/img/"
+	"staticImagePath" : "gcloud/syncspot/static/img/",
+	"jwtTokenSecret" : "T4eULTnKbWCKlABPI4pu"
 }
