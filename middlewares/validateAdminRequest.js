@@ -17,7 +17,7 @@ module.exports = function(req, res, next) {
   var lastPart = req.path.split("/").pop().toLowerCase();
 
   //need to comment this console
-  console.log(lastPart);
+  //console.log(lastPart);
   if((lastPart === 'adminloggin') || (lastPart === 'superadminloggin'))
   {
      next(); // To move to next middleware
@@ -30,7 +30,7 @@ module.exports = function(req, res, next) {
 
       
         var decoded = jwt.decode(token, defaultConfig.jwtTokenSecret);
-        console.log(decoded.iss);
+        //console.log(decoded.iss);
 
         ValidateUserCollection.findOne({_id : ObjectId(decoded.iss) },function(err,result){
         if(err)

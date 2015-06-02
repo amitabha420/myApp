@@ -322,12 +322,15 @@ exports.getUserDetails = function(req,res)
     var input = req.body;
     var ObjectId = require('mongoose').Types.ObjectId;
 
-    /*
+    //console.log(req);
+    //console.log('amitabha');
+
+    
     if(!ObjectId.isValid(input._userid))
     {
         res.status(200).send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
     }
-    else*/
+    else
     {
         var _userid =  ObjectId(input._userid); 
 

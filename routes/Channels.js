@@ -426,6 +426,7 @@ exports.CreateGeoLocation = function(req,res)
     var StatusCode = 200;
     var Message = "";
 
+    //console.log(LocationObject.LocationType);
 
     var ObjectId = require('mongoose').Types.ObjectId;
     var _userid = new ObjectId(RequestData._userid);
@@ -440,51 +441,9 @@ exports.CreateGeoLocation = function(req,res)
     LocationObject.Matchpoint.coordinates = RequestData.CentralCoordinate;
     LocationObject.LocationName = RequestData.LocationName;
     LocationObject.Notification = RequestData.Notification;
+    LocationObject.LocationType = RequestData.LocationType;
 
-    /*
-    var GeoFencingData = {
-                            "Loc" : { type : {type : String} , coordinates : []  },
-                            "Digitalcontents" : [],
-                            "Matchpoint" : { type : {type : String} , coordinates : []  },
-                            "LocationName" : String,
-                            "Notification" : String,
-                        };
-        //GeoFencingData.Digitalcontents = DigitalContents;
-        for (var i = 0 ; i < RequestData.Digitalcontents.length; i++) 
-        {
-            var imageurl = defaultConfig.contentdefaultbanner ;
-            var startTime = parseFloat(RequestData.Digitalcontents[i].StartingTime).toFixed(2);
-            var endTime = parseFloat(RequestData.Digitalcontents[i].EndingTime).toFixed(2);
-            var MaxAccessValue = RequestData.Digitalcontents[i].MaxAccessValue;
-            if(RequestData.Digitalcontents[i].ImageUrl)
-            {
-                imageurl = RequestData.Digitalcontents[i].ImageUrl;
-            }
-            var content = 
-            {
-                Url : RequestData.Digitalcontents[i].Url,
-                Name : RequestData.Digitalcontents[i].Name,
-                Type : RequestData.Digitalcontents[i].Type,
-                ImageUrl : imageurl,
-                StartingTime : startTime,
-                EndingTime : endTime,
-                MaxAccessValue : MaxAccessValue
-            };
-             GeoFencingData.Digitalcontents.push(content);
-        };
-        GeoFencingData.LocationName = RequestData.LocationName;
-        //GeoFencingData.CentralCoordinate = RequestData.CentralCoordinate;//[];
-        GeoFencingData.CentralCoordinate = [];
-        GeoFencingData.CentralCoordinate.push(RequestData.CentralCoordinate);
-        GeoFencingData.Notification = RequestData.Notification;
-        GeoFencingData.Loc.type = "Polygon";
-        GeoFencingData.Loc.coordinates = [];
-        GeoFencingData.Loc.coordinates.push(RequestData.Coordinates);
 
-        GeoFencingData.Matchpoint.type = "Point";
-        GeoFencingData.Matchpoint.coordinates = RequestData.CentralCoordinate;
-        //res.send(GeoFencingData);
-        */
 
     //200 : OK
     //201 : Channel already exists for the user.
@@ -611,6 +570,7 @@ exports.CreateGeoLocation = function(req,res)
                     });
             }
         })
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

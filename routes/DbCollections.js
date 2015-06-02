@@ -60,6 +60,7 @@ var GeoLocationSchema = new Schema({
     "ChannelId" : String,
     "ChannelName" : String,
     "BannerImageUrl" : String,
+    "LocationType":String,
     "loc" : { type : {type: String }, coordinates : []  },
     "Matchpoint" : {type : {type : String}, coordinates : []},
     "Digitalcontents" : [
@@ -140,5 +141,41 @@ var FeedBackSchema = new Schema({
 },{collection : 'FeedBack'});
 exports.FeedBackSchema = mongoose.model('FeedBack', FeedBackSchema);
 
+var LocationTypeSchema = new Schema({
+    LocationType : String
+},{collection : 'LocationType'});
+exports.LocationTypeSchema = mongoose.model('LocationType', LocationTypeSchema);
+
+
+
+var LogEntrySchema = new mongoose.Schema({
+    msg: {
+        type: String,
+        required: true
+    },
+    level: {
+        type: Number,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    time: {
+        type: Date,
+        required: true
+    },
+    res : {
+        type: Object
+    },
+    req : {
+        type: Object
+    },
+    reqbody : {
+        type : Object
+    }
+},{collection : 'Log'});
+
+exports.LogEntryModel = mongoose.model('Log', LogEntrySchema);
 
 

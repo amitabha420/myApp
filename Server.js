@@ -1,4 +1,6 @@
 
+
+
 var express = require('express');
     bodyParser = require('body-parser');
     Register = require('./routes/Register');
@@ -8,6 +10,7 @@ var express = require('express');
     SaveChannelContents = require('./routes/SaveChannelContents');
     Statistics = require('./routes/Statistics');
     UserContentAccessHistory = require('./routes/UserContentAccessHistory');
+    LocationType = require('./routes/LocationTypes');
     WebCMS = require('./routes/WebCMS');
 var app = express();
 
@@ -85,7 +88,12 @@ app.post('/syncspot/cloud/api/v1/webcms/addContentToChannel',Channels.addContent
 
 app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
 app.post('/syncspot/cloud/api/v1/webcms/Statistics/GetContentsStatinDateRange',WebCMS.GetContentWiseStats_v1);
+app.post('/syncspot/cloud/api/v1/webcms/Statistics/GetContentsStatinDateRange',WebCMS.GetContentWiseStats_v1);
 
+app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/Create',LocationType.CreateLocationType);
+app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/Get', LocationType.getLocationType);
+app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/remove', LocationType.removeLocationType);
+ 
 
 
 
@@ -99,9 +107,29 @@ app.use(function(err, req, res, next) {
 
   if(err)
   {
-    //console.log(req.body);
-    //console.log(req.route.path);
-    //console.log(JSON.stringify(err[0]));
+
+    console.log(req.body);
+    
+    //
+    // Do not change the code. loggin is done.
+    //
+    var LogEntryModel = require('./routes/DbCollections.js').LogEntryModel;
+
+    var LogEntryStream = require('bunyan-mongodb-stream')({model: LogEntryModel});
+
+    var bunyan = require('bunyan');
+    var logger = bunyan.createLogger({
+    name: 'SyncSpot-bunyan',
+    req : req,
+    reqbody : req.body,
+    streams: [
+        {
+            stream: LogEntryStream
+        }
+      ],
+      serializers: bunyan.stdSerializers
+    });
+    logger.info(err);
     res.status(500).send({"StatusCode" : "500" ,"Message" : err.message});
   }
   
