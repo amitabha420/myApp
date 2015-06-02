@@ -23,7 +23,8 @@ var UsersSchema = new Schema({
     "age": String,
     "profiletype": String,  //values => facebook/twitter/manual(default)
     "token" : String,
-    "profileimageurl" : String
+    "profileimageurl" : String,
+    "CreateDate" : {type: Date, default: Date.now}
 },{ collection: 'Users' });
 
 exports.UsersCollection = mongoose.model('Users', UsersSchema);
@@ -71,7 +72,8 @@ var GeoLocationSchema = new Schema({
                                 ImageUrl : String,
                                 StartingTime : String,
                                 EndingTime : String,
-                                MaxAccessValue : String
+                                MaxAccessValue : String,
+                                Downloadable : { type: Boolean, default: false }
                             }
                         ],
     "LocationName" : String,

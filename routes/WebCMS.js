@@ -4,6 +4,7 @@ var AdminUsersSchema = require('./DbCollections.js').AdminUsersSchema;
 var GeoLocationCollection = require('./DbCollections.js').GeoLocationSchema;
 var StatContentAccessSchema = require('./DbCollections.js').StatContentAccessSchema;
 var ValidateUserCollection = require('./DbCollections.js').ValidateUserCollection;
+var UserSavedContentsSchema = require('./DbCollections.js').UserSavedContentsSchema;
 var async = require('async');
 var jwt = require('jwt-simple'); //--
 var moment = require('moment');  //--
@@ -534,4 +535,181 @@ exports.GetContentWiseStats_v1 = function(req,res)
                     res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});      
            });
 
+}
+
+
+exports.getContentByLocationId = function(req,res)
+{
+    var input = req.body;
+    var LocationId=input._id;
+    console.log(LocationId);
+    var ObjectId = require('mongoose').Types.ObjectId;
+    GeoLocationCollection.find({"_id":ObjectId(LocationId)},
+        {
+            Digitalcontents:1,
+            _id:0
+        },
+     function(err,result)
+     {
+        if(err)
+            res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});      
+        else
+            res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});  
+     });
+}
+
+
+exports.removeContentByContentId = function(req,res)
+{
+    var input = req.body;
+    var LocationId=input._id;
+    console.log(LocationId);
+    var ObjectId = require('mongoose').Types.ObjectId;
+    GeoLocationCollection.findOne({"Digitalcontents._id":ObjectId(LocationId)},
+    function(err,result)
+    {
+     if(result!=null)
+        {
+            if(err)
+            {
+                res.send({"result" : "", "StatusCode" : "500" ,"Message" : "Internal server error"});      
+            }
+            else
+            {
+                console.log(result.Digitalcontents.length);
+                var contentIndex=-1;
+                for (var i = 0; i < result.Digitalcontents.length; i++) 
+                {
+                    if(result.Digitalcontents[i]["_id"]==LocationId)
+                    {
+                        contentIndex=i;
+                        console.log("true");
+                        break;
+                    }
+                }
+                if(contentIndex!=-1)
+                {
+                    result.Digitalcontents.splice(contentIndex,1);
+                    result.save(function(error,obj)
+                            {
+                                if(error)
+                                {
+                                    res.send({"StatusCode" : StatusCode ,"500" : "Internal server error"});
+                                }
+                                else
+                                {
+                                    res.send({"StatusCode" : "200" ,"Message" : "OK"});
+                                }
+                            });
+                }
+                else
+                {
+                    res.send({"StatusCode" : "422" ,"Message" : "Invalid entity"});                            
+                }
+            }
+        }
+     else
+        {
+            res.send({"StatusCode" : "422" ,"Message" : "Invalid entity"});                            
+        }
+     });
+}
+
+/*exports.getUserCountInLastWeek = function(req,res)
+{
+    var input = req.body;
+    var end =new Date();
+    var start = new Date(end.getTime() - (7 * 24 * 60 * 60 * 1000));
+console.log(end);
+console.log(start);
+    UsersCollection.find({"CreateDate": {"$gte": start, "$lt": end}}).count().exec(
+        function(err,result)
+     {
+        if(err)
+            res.send(result);      
+        else
+            res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});  
+     });
+}
+
+exports.getUserCountBeforeLastWeek = function(req,res)
+{
+    var input = req.body;
+    var end =new Date();
+    var start = new Date(end.getTime() - (7 * 24 * 60 * 60 * 1000));
+
+    UsersCollection.find({"CreateDate": {"$lt": start}}).count().exec(
+        function(err,result)
+     {
+        if(err)
+            res.send(result);      
+        else
+            res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});  
+     });
+}
+*/
+
+/* INPUT
+{
+  "fromDate":["2015","06","15"],
+  "countType":"Weekly"
+}
+*/
+//number of new users Weekly, Monthly and Daily.
+exports.getNewUserCount_Weekly_Monthly_Daily = function(req,res)
+{
+    var input = req.body;
+    var _fromDate = input.fromDate;
+
+    var countType=input.countType;
+   
+    if(countType=="Daily")
+    {
+      var fromDate = new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1])-1,parseInt(_fromDate[2]));
+      var endDate = new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1])-1,parseInt(_fromDate[2])+1);
+     
+      UsersCollection.find({"CreateDate": {"$gte": fromDate, "$lt": endDate}}).count().exec(
+                function(err,result)
+             {
+                if(err)
+                    res.send(result);      
+                else
+                    res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});  
+             });
+    }
+    else if(countType=="Weekly")
+    {
+        var curr = new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1])-1,parseInt(_fromDate[2]));
+        var currDay=curr.getDay();
+        var firstday = new Date(curr.getTime() - ((parseInt(currDay)-1) * 24 * 60 * 60 * 1000));
+        var lastday = new Date(curr.getTime() + ((7-parseInt(currDay)) * 24 * 60 * 60 * 1000));
+
+        //console.log(currDay);
+        //console.log(firstday);
+        //console.log(lastday);
+
+        UsersCollection.find({"CreateDate": {"$gte": firstday, "$lte": lastday}}).count().exec(
+        function(err,result)
+         {
+            if(err)
+                res.send(result);      
+            else
+                res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});  
+         });
+    }
+    else
+    {
+        var startDate=new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1])-1,1);
+        var endDate=new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1])-1,new Date(parseInt(_fromDate[0]),parseInt(_fromDate[1]), 0).getDate());
+       
+        UsersCollection.find({"CreateDate": {"$gte": startDate, "$lte": endDate}}).count().exec(
+        function(err,result)
+         {
+            if(err)
+                res.send(result);      
+            else
+                res.status(200).send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});  
+         });
+    }
+    
 }

@@ -26,14 +26,14 @@ exports.CreateLocationType = function(req,res)
     				contentobj.save(function(err,obj)
 			    	{
 			    		if(err)
-			    			res.send({"StatusCode" : "500" ,"Message" : "Internal server error"});             
+			    			res.send({"result" : "" ,"StatusCode" : "500" ,"Message" : "Internal server error"});             
 			    		else
-			    			res.send({"StatusCode" : "200" ,"Message" : "OK"});             
+			    			res.send({"result" : obj,"StatusCode" : "200" ,"Message" : "OK"});             
 			    	});	
     			}
     			else
     			{
-					res.send({"StatusCode" : "200" ,"Message" : "OK"});             
+					res.send({"result" : result,"StatusCode" : "200" ,"Message" : "OK"});             
     			}
     		}
     	});
@@ -51,7 +51,7 @@ exports.getLocationType = function(req,res)
     LocationType.find({},
         {
             "LocationType" : 1,
-            "_id"          : 0
+            "_id"          : 1
         },
      function(err,result)
      {
@@ -64,17 +64,17 @@ exports.getLocationType = function(req,res)
 
 
 
-/* remove location type
+/* remove location type by Id
 INPUT 
 {
-	"LocationType" : "Park"
+	"_id" : "556dc4579a55523c2cc84b89"
 }
 */
-exports.removeLocationType = function(req,res)
+exports.removeLocationTypeById = function(req,res)
 {
 	 var input = req.body;
-
-    LocationType.remove({"LocationType" : input.LocationType },
+     var ObjectId = require('mongoose').Types.ObjectId;
+    LocationType.remove({_id : ObjectId(input._id) },
         
      function(err,result)
      {

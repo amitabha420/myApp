@@ -12,6 +12,7 @@ var express = require('express');
     UserContentAccessHistory = require('./routes/UserContentAccessHistory');
     LocationType = require('./routes/LocationTypes');
     WebCMS = require('./routes/WebCMS');
+    Policy = require('./routes/Policy');
 var app = express();
 
 
@@ -57,6 +58,7 @@ app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotSt
 
 //app.get('/Statistics/callstoredFunction', Statistics.callstoredFunction);
 app.post('/Statistics/lockContent', Statistics.lockContent);
+app.post('/Policy',Policy.getTerms_and_Conditions);
 
 
 
@@ -85,16 +87,19 @@ app.post('/syncspot/cloud/api/v1/webcms/DeleteGeoFenceDataForChannel',Channels.D
 app.post('/syncspot/cloud/api/v1/webcms/CreateGeoLocation',Channels.CreateGeoLocation);
 app.post('/syncspot/cloud/api/v1/webcms/AlterDigitalcontents',Channels.EditDigitalContents);
 app.post('/syncspot/cloud/api/v1/webcms/addContentToChannel',Channels.addContentToChannel);  //not mensioned by client 
+app.post('/syncspot/cloud/api/v1/webcms/getContentByLocationId', WebCMS.getContentByLocationId);
+app.post('/syncspot/cloud/api/v1/webcms/removeContentByContentId', WebCMS.removeContentByContentId);
 
 app.post('/syncspot/cloud/api/v1/webcms/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
-app.post('/syncspot/cloud/api/v1/webcms/Statistics/GetContentsStatinDateRange',WebCMS.GetContentWiseStats_v1);
 app.post('/syncspot/cloud/api/v1/webcms/Statistics/GetContentsStatinDateRange',WebCMS.GetContentWiseStats_v1);
 
 app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/Create',LocationType.CreateLocationType);
 app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/Get', LocationType.getLocationType);
-app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/remove', LocationType.removeLocationType);
+app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/remove', LocationType.removeLocationTypeById);
  
+app.post('/syncspot/cloud/api/v1/webcms/Statistics/getNewUserCount_Weekly_Monthly_Daily', WebCMS.getNewUserCount_Weekly_Monthly_Daily);
 
+//app.post('/syncspot/cloud/api/v1/webcms/getUserCountBeforeLastWeek', WebCMS.getUserCountBeforeLastWeek);
 
 
 // more middleware (executes after routes)
