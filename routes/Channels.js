@@ -292,7 +292,43 @@ exports.Delete = function(req,res)
 }
 
 
+/*Get Only Channel data by Id*/
+/*INPUT
+{
+    "channelid" : "5559fd614e4a72e412d6d5df"
+}
+*/
+exports.GetChannelById = function(req,res)
+{
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var cid = ObjectId(input.channelid);
 
+    //adminUsersSchema.findOne({"Channel._id": ObjectId(input.channelid)})    
+
+    if(!ObjectId.isValid(input.channelid))
+    {
+        res.status(200).send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+    }
+    else
+    {
+        adminUsersSchema.find({"Channel._id": cid},
+        {
+            "Channel" : {$elemMatch : { "_id" : cid } },
+            "Channel.ChannelName" : 1,
+            "Channel.ChannelDescription" : 1,
+            "Channel.BannerImageUrl" : 1,
+            "Channel._id" : 1,
+            "Channel.CreateDate" : 1
+        },function(err,result)
+        {
+            if(err)
+                res.send({"result":err, "StatusCode" : "500" , "Message" : "Internal server error"});
+            else
+                res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});
+        })    
+    }
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

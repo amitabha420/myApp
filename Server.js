@@ -83,6 +83,7 @@ app.post('/syncspot/cloud/api/v1/webcms/getLocationDetailsByLocationId',WebCMS.g
 app.post('/syncspot/cloud/api/v1/webcms/CreateChannel',Channels.Create);
 app.post('/syncspot/cloud/api/v1/webcms/EditChannel',Channels.Edit);
 app.post('/syncspot/cloud/api/v1/webcms/DeleteChannel',Channels.Delete);
+app.post('/syncspot/cloud/api/v1/webcms/GetChannelById',Channels.GetChannelById);
 app.post('/syncspot/cloud/api/v1/webcms/DeleteGeoFenceDataForChannel',Channels.DeleteGeoFenceDataForChannel);  //not mensioned by client
 app.post('/syncspot/cloud/api/v1/webcms/CreateGeoLocation',Channels.CreateGeoLocation);
 app.post('/syncspot/cloud/api/v1/webcms/AlterDigitalcontents',Channels.EditDigitalContents);
@@ -97,9 +98,8 @@ app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/Create',LocationType.Creat
 app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/Get', LocationType.getLocationType);
 app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/remove', LocationType.removeLocationTypeById);
  
-app.post('/syncspot/cloud/api/v1/webcms/Statistics/getNewUserCount_Weekly_Monthly_Daily', WebCMS.getNewUserCount_Weekly_Monthly_Daily);
-
-//app.post('/syncspot/cloud/api/v1/webcms/EditExistingDigitalContents',Channels.EditExistingDigitalContents);
+app.post('/syncspot/cloud/api/v1/webcms/Statistics/getNewUserCount_Weekly_Monthly_Daily', Statistics.getNewUserCount_Weekly_Monthly_Daily);
+app.post('/syncspot/cloud/api/v1/webcms/Statistics/getContentAccessCount_Weekly_Monthly_Daily',Statistics.getContentAccessCount_Weekly_Monthly_Daily);
 
 //app.post('/syncspot/cloud/api/v1/webcms/getUserCountBeforeLastWeek', WebCMS.getUserCountBeforeLastWeek);
 
@@ -109,13 +109,14 @@ app.use(function(req, res, next) {
   //console.log('middleware');
 });
 
+
 // error handling middleware
 app.use(function(err, req, res, next) {
 
   if(err)
   {
 
-    console.log(req.body);
+    //console.log(req.body);
     
     //
     // Do not change the code. loggin is done.

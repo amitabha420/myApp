@@ -6,6 +6,7 @@ module.exports = function(req, res, next) {
  
   // We skip the token outh for [OPTIONS] requests.
   //if(req.method == 'OPTIONS') next();
+  //console.log("Ii");
   var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
   //var key = (req.body && req.body.x_key) || (req.query && req.query.x_key) || req.headers['x-key'];
  
@@ -28,9 +29,25 @@ module.exports = function(req, res, next) {
       var jwt = require('jwt-simple'); //--
       var defaultConfig = require('../defaultConfig.json');
 
-      
-        var decoded = jwt.decode(token, defaultConfig.jwtTokenSecret);
+        //console.log(defaultConfig.jwtTokenSecret);
+        var decoded = new Object();
+        try
+        {
+           decoded = jwt.decode(token, defaultConfig.jwtTokenSecret);
+        }
+        catch(ex)
+        {
+          res.status(500);
+          res.json({
+            "StatusCode": 500,
+            "Message": "Invalid Token",
+          });
+          return;
+        }
+        
         //console.log(decoded.iss);
+
+        
 
         ValidateUserCollection.findOne({_id : ObjectId(decoded.iss) },function(err,result){
         if(err)
@@ -56,6 +73,7 @@ module.exports = function(req, res, next) {
                 });
                 return;
               }
+              
             next(); // To move to next middleware
           }
         } 
