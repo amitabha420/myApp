@@ -212,9 +212,7 @@ exports._Login = function(req,res)
                     res.send({"result" : "", "StatusCode" : "202" ,"Message" : "Invalid UserName and Password"});             
                 }
                 else    
-                {
-                    
-
+                {                   
                     //res.send({"result" : result,"token": token, "StatusCode" : "200" ,"Message" : "OK"});
                     
                     var ValidateUser = new ValidateUserCollection();
@@ -239,9 +237,7 @@ exports._Login = function(req,res)
                             }
                         });
                     //res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});                 
-                }
-                
-                
+                }               
             }
         });
 }

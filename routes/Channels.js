@@ -631,6 +631,42 @@ exports.EditDigitalContents = function(req,res)
 }
 
 
+
+/*exports.EditExistingDigitalContents = function(req,res)
+{
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var contentid = new ObjectId(input.contentid);
+    var locationid = new ObjectId(input.locationid);
+    
+
+    GeoLocationSchema.update({_id : locationid,'Digitalcontents._id' : contentid}
+                        ,
+                        { 
+                            $set: 
+                            { 
+                                'Digitalcontents.$.Downloadable': false
+                            } 
+                        },
+                        { multi: false },
+                        function(err,result)
+                        {
+                            if(err)
+                                {
+                                    res.send({"result" : "", "StatusCode" : StatusCode ,"500" : "Internal server error"});
+                                }
+                                else
+                                {
+                                    
+                                    res.send({"result" : result, "StatusCode" : "200" ,"Message" : "OK"});
+                                    //res.send(AdminUserDbObject);
+                                }
+                        });
+    
+    
+}*/
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*********************SUMMERY**********************/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

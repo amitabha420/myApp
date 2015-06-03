@@ -35,6 +35,7 @@ exports.EnlistContentAccess = function(req,res)
 	StatContentAccess.contenturl = input.contenturl;
 	StatContentAccess.contentName = input.contentName;
 	StatContentAccess.contentid = input.contentid;
+	StatContentAccess.IsDownloaded = input.isdownloaded=="0"?false:true;
 
 	StatContentAccess.save(function(err,obj)
 		{

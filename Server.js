@@ -99,6 +99,8 @@ app.post('/syncspot/cloud/api/v1/webcms/LocationTypes/remove', LocationType.remo
  
 app.post('/syncspot/cloud/api/v1/webcms/Statistics/getNewUserCount_Weekly_Monthly_Daily', WebCMS.getNewUserCount_Weekly_Monthly_Daily);
 
+//app.post('/syncspot/cloud/api/v1/webcms/EditExistingDigitalContents',Channels.EditExistingDigitalContents);
+
 //app.post('/syncspot/cloud/api/v1/webcms/getUserCountBeforeLastWeek', WebCMS.getUserCountBeforeLastWeek);
 
 

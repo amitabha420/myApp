@@ -115,7 +115,8 @@ var StatContentAccessSchema = new Schema({
     contentName : String,
     contentid : String,
     deleted : Boolean,
-    CreateDate : {type: Date, default: Date.now}
+    CreateDate : {type: Date, default: Date.now},
+    IsDownloaded : {type: Boolean,default:false}
 },{collection : 'StatContentAccess'});
 
 exports.StatContentAccessSchema = mongoose.model('StatContentAccess', StatContentAccessSchema);
