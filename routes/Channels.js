@@ -469,7 +469,7 @@ exports.CreateGeoLocation = function(req,res)
 
     var LocationObject = new GeoLocationSchema();
     LocationObject.UserId = RequestData._userid;
-    LocationObject.ChannelName = RequestData.ChannelName;
+    LocationObject.ChannelId = RequestData.ChannelId;
     LocationObject.loc.type = "Polygon";
     LocationObject.loc.coordinates = [];
     LocationObject.loc.coordinates.push(RequestData.Coordinates);
@@ -493,7 +493,7 @@ exports.CreateGeoLocation = function(req,res)
     async.series([
         function(callback){
             //Location name duplication checking
-            GeoLocationSchema.findOne({UserId : RequestData._userid, ChannelName : serchtextChannel, LocationName : serachtextLocation},
+            GeoLocationSchema.findOne({UserId : RequestData._userid, ChannelId : RequestData.ChannelId, LocationName : serachtextLocation},
                 function(err,res)
                 {
                     if(err)
@@ -515,7 +515,7 @@ exports.CreateGeoLocation = function(req,res)
         
         function(callback) {
 
-            adminUsersSchema.findOne({ _id: _userid, "Channel.ChannelName": RequestData.ChannelName }, function(err,obj) 
+            adminUsersSchema.findOne({ _id: _userid, "Channel._id": ObjectId(RequestData.ChannelId) }, function(err,obj) 
             {
                 //console.log(JSON.stringify(obj));
                 if(err)
@@ -531,9 +531,10 @@ exports.CreateGeoLocation = function(req,res)
                         
                         for(var i=0;i<obj.Channel.length;i++)
                         {
-                            if (obj.Channel[i].ChannelName.toLowerCase() === RequestData.ChannelName.toLowerCase())
+                            if (obj.Channel[i]._id === RequestData.ChannelId)
                             {
                                 LocationObject.ChannelId = obj.Channel[i]._id;
+                                LocationObject.ChannelName = obj.Channel[i].ChannelName;
                                 LocationObject.BannerImageUrl = obj.Channel[i].BannerImageUrl;
                             }
                         }
@@ -585,7 +586,7 @@ exports.CreateGeoLocation = function(req,res)
                         else
                         {
                             adminUsersSchema.update(
-                                { _id: _userid, "Channel.ChannelName": RequestData.ChannelName },
+                                { _id: _userid, "Channel._id": ObjectId(RequestData.ChannelId) },
                                 { $currentDate: { "Channel.$.ModifiedDate" : true } },
                                 { multi: false },
                                 function(error,result)
