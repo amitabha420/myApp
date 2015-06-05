@@ -741,7 +741,8 @@ exports.addContentToChannel = function(req,res)
     var startTime = parseFloat(input.StartingTime).toFixed(2);
     var endTime = parseFloat(input.EndingTime).toFixed(2);
     var MaxAccessValue = input.MaxAccessValue;
-
+    console.log(input.IsDownloadable);
+    var IsDownloadable=input.IsDownloadable=="true"?true:false;
     if(input.ImageUrl)
     {
         imageurl = input.ImageUrl;
@@ -760,7 +761,8 @@ exports.addContentToChannel = function(req,res)
                                     ImageUrl : imageurl,
                                     StartingTime : startTime,
                                     EndingTime : endTime,
-                                    MaxAccessValue : MaxAccessValue
+                                    MaxAccessValue : MaxAccessValue,
+                                    Downloadable:IsDownloadable
                                 };
                             //res.send(result);
                             
@@ -789,4 +791,35 @@ exports.addContentToChannel = function(req,res)
                             }   
                         
                     });
+}
+
+/* This API is used to delete the GeoLocation.
+{
+  "_id" : "553f2e4e82d5f2ac1618ad7d"
+}
+
+*/
+exports.DeleteGeoLocationByLocationId = function(req,res)
+{
+    //200 : OK
+    //404 : Data is not valid.
+    //500 : Internal server error.
+
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+    var _locationid = new ObjectId(input._id);
+    
+    GeoLocationSchema.remove({_id : _locationid},
+        function(error,result)
+        {
+             if(error)
+                {
+                    res.send({"result" : err,"StatusCode" : StatusCode ,"500" : "Internal server error"});
+                }
+                else
+                {
+
+                    res.send({"result" : result," StatusCode" : "200" ,"Message" : "OK"});
+                }
+        });
 }

@@ -103,7 +103,7 @@ app.post('/syncspot/cloud/api/v1/webcms/Statistics/getContentAccessCount_Weekly_
 
 //app.post('/syncspot/cloud/api/v1/webcms/getUserCountBeforeLastWeek', WebCMS.getUserCountBeforeLastWeek);
 
-
+app.post('/syncspot/cloud/api/v1/webcms/DeleteGeoLocationByLocationId',Channels.DeleteGeoLocationByLocationId); 
 // more middleware (executes after routes)
 app.use(function(req, res, next) {
   //console.log('middleware');
