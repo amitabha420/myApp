@@ -253,6 +253,130 @@ exports.updateRegistration = function(req,res)
         })
 }
 
+exports.updateRegistrationWithPassword = function(req,res)
+{
+    var input = req.body;
+    var ObjectId = require('mongoose').Types.ObjectId;
+
+
+    /*Image file save related variables*/
+    var fs = require("fs");
+    var crypto = require('crypto');
+    var seed   = crypto.randomBytes(20);
+    var uniqueSHA1String  = crypto
+                            .createHash('sha1')
+                            .update(seed)
+                            .digest('hex');
+    var imagename = "../myApp/static/img/" + uniqueSHA1String + ".jpg";
+    
+    /*end*/
+
+     async.series([
+        
+        function(callback) {
+            if(input.profiletype == 'manual' && input.ImageFile != '')
+            {
+               fs.writeFile(imagename, new Buffer(input.ImageFile, "base64"), function(err) 
+                {
+                    if(err)
+                    {
+                        console.log(err);
+                        res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                    }
+                    else
+                    {
+                        console.log('saved');   
+                        callback();  
+                    }
+                });
+            }
+            else
+            {
+              callback();  
+            }
+            
+            //
+        }, //1st function end
+
+        ], //end of function serize
+            function(err) { //This function gets called after the two tasks have called their "task callbacks"
+
+            if(err)
+            {
+                res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
+            }
+            else
+            {
+                    if(!ObjectId.isValid(input._userid))
+                    {
+                        res.status(200).send({"StatusCode" : "401",  "Message" : "Invalid ObjectId format"});
+                    }
+                    else
+                    {
+                        var _userid =  ObjectId(input._userid); 
+                    
+                        UsersCollection.findOne({_id : _userid}, function(err,obj)   //, password : input.OldPassword
+                        {
+                            if(err)
+                            {
+                                res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                            }
+                            else
+                            {
+                                console.log(obj);
+                                if(obj!=null)
+                                {
+                                    /*
+                                    obj.firstName = input.firstName;
+                                    obj.lastName = input.lastName;
+                                    obj.gender = input.gender;
+                                    obj.age = input.age;
+                                    obj.profiletype = input.profiletype,
+                                    obj.token = input.token;*/
+
+                                    obj.email = input.email
+                                    obj.firstName = input.firstName;
+                                    obj.lastName = input.lastName;
+                                    obj.gender = input.gender;
+                                    obj.age = input.age;
+                                    obj.profiletype = input.profiletype;
+                                    obj.password=input.password;
+                                    //obj.token = input.token;
+                                    
+
+                                    if(input.profiletype == 'manual' && input.ImageFile != '')
+                                    {
+                                        obj.profileimageurl = defaultConfig.baseIp + defaultConfig.staticImagePath + uniqueSHA1String + ".jpg" ;    
+                                    }
+                                    else
+                                    {
+                                        obj.profileimageurl = input.imageurl;    
+                                    }
+                                    
+
+                                    obj.save(function(error,result)
+                                    {
+                                        if(err)
+                                        {
+                                            res.status(200).send({"StatusCode" : "500",  "Message" : "Internal server error"});
+                                        }
+                                        else
+                                        {
+                                            res.status(200).send({"StatusCode" : "200",  "Message" : "OK"});
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    res.status(200).send({"StatusCode" : "404",  "Message" : "Data is not valid"});
+                                }
+                                
+                            }
+                        });
+                    }
+            }
+        })
+}
 
 exports.Loggin = function (req, res) {
     

@@ -58,7 +58,9 @@ exports.GeoLocations = function(req,res)
       }
       else
       {
-
+        //var finalobject = [];
+        //var output = getUnique(result);
+        //console.log(output);
         /*  Put all locations for a channel in a single object of the resulting array.
         var finalobject = [];
         var output = getUnique(result);

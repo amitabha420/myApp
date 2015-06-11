@@ -30,6 +30,7 @@ app.use('/gcloud/syncspot/static/img',express.static("static" + "/img"));
 app.get('/Register', Register.Test);
 app.post('/Register', Register.Register);
 app.post('/updateRegistration',Register.updateRegistration);
+app.post('/updateRegistrationWithPassword',Register.updateRegistrationWithPassword);
 app.post('/Loggin',Register.Loggin);
 app.post('/User/getUserDetails',Register.getUserDetails);
 app.post('/User/ChangePassword',Register.changePassword);
