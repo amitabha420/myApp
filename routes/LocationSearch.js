@@ -53,21 +53,21 @@ exports.GeoLocations = function(req,res)
               'loc' : 1,
             },
             { skip: 0, limit: limit },
-            function(err,result)
+            function(err,results)
             {
                 if(err)
                 {
                   callback(err,null)
                 }else
                 {
-                  callback(null,result)
+                  callback(null,results)
                 }
 
             });
         },
-        function(result,callback) {
-            var finalArray=[];
-                  async.each(result,
+        function(results,callback) {
+            var result=[];
+                  async.each(results,
                     function(item, callback){
                     var finalobject={};
                      AdminUsersSchema.findOne({'Channel._id':item.ChannelId},
@@ -75,7 +75,7 @@ exports.GeoLocations = function(req,res)
                               if(err){
                                 callback(err)
                               }else{
-                       
+
                                     finalobject.ChannelName=item.ChannelName;
                                     finalobject.ChannelId=item.ChannelId;
                                     finalobject.BannerImageUrl=item.BannerImageUrl;
@@ -86,7 +86,7 @@ exports.GeoLocations = function(req,res)
                                     finalobject.Matchpoint=item.Matchpoint;
                                     finalobject.loc=item.loc;
                                     finalobject.ChannelDescription=locRes.Channel[0].ChannelDescription;
-                                    finalArray.push(finalobject);  
+                                    result.push(finalobject);  
                                     callback();
          
                               }
@@ -100,7 +100,7 @@ exports.GeoLocations = function(req,res)
 
                       } else{
                       // All tasks are done now
-                    res.send({"finalArray" : finalArray , "StatusCode" : 200 ,"Message" : "OK"});
+                    res.send({"result" : result , "StatusCode" : 200 ,"Message" : "OK"});
                   };
                     }
                   );
