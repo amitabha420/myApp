@@ -814,7 +814,7 @@ exports.DeleteGeoLocationByLocationId = function(req,res)
         {
              if(error)
                 {
-                    res.send({"result" : err,"StatusCode" : StatusCode ,"500" : "Internal server error"});
+                    res.send({"result" : err,"StatusCode" : StatusCode ,"Message" : "Internal server error"});
                 }
                 else
                 {
