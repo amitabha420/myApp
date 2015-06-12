@@ -88,6 +88,7 @@ exports.GeoLocations = function(req,res)
                                     finalobject.ChannelDescription=locRes.Channel[0].ChannelDescription;
                                     result.push(finalobject);  
                                     callback();
+                                    
          
                               }
                                 }
