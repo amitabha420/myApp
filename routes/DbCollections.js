@@ -60,6 +60,7 @@ var GeoLocationSchema = new Schema({
     "UserId" : String,
     "ChannelId" : String,
     "ChannelName" : String,
+    "ChannelDescription" : String,
     "BannerImageUrl" : String,
     "LocationType":String,
     "loc" : { type : {type: String }, coordinates : []  },

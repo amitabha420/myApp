@@ -462,8 +462,6 @@ exports.CreateGeoLocation = function(req,res)
     var StatusCode = 200;
     var Message = "";
 
-    //console.log(LocationObject.LocationType);
-
     var ObjectId = require('mongoose').Types.ObjectId;
     var _userid = new ObjectId(RequestData._userid);
 
@@ -487,14 +485,14 @@ exports.CreateGeoLocation = function(req,res)
     //500 : Internal server error.
     
     
-    var serchtextChannel = new RegExp(RequestData.ChannelName, "i");
+    //var serchtextChannel = new RegExp(RequestData.ChannelName, "i"); //Channel Name is not required to send from input now
     var serachtextLocation = new RegExp(RequestData.LocationName ,"i");
 
     async.series([
         function(callback){
             //Location name duplication checking
             GeoLocationSchema.findOne({UserId : RequestData._userid, ChannelId : RequestData.ChannelId, LocationName : serachtextLocation},
-                function(err,res)
+                function(err,objduplicationchecking)
                 {
                     if(err)
                     {
@@ -503,7 +501,8 @@ exports.CreateGeoLocation = function(req,res)
                     }
                     else
                     {
-                        if(res!=null)
+                        
+                        if(objduplicationchecking!=null)
                         {
                             StatusCode = 405;
                             Message = "Location already exists.";
@@ -517,7 +516,6 @@ exports.CreateGeoLocation = function(req,res)
 
             adminUsersSchema.findOne({ _id: _userid, "Channel._id": ObjectId(RequestData.ChannelId) }, function(err,obj) 
             {
-                //console.log(JSON.stringify(obj));
                 if(err)
                 {
                     console.log(err);
@@ -531,11 +529,13 @@ exports.CreateGeoLocation = function(req,res)
                         
                         for(var i=0;i<obj.Channel.length;i++)
                         {
-                            if (obj.Channel[i]._id === RequestData.ChannelId)
+
+                            if (obj.Channel[i]._id == RequestData.ChannelId)
                             {
                                 LocationObject.ChannelId = obj.Channel[i]._id;
                                 LocationObject.ChannelName = obj.Channel[i].ChannelName;
                                 LocationObject.BannerImageUrl = obj.Channel[i].BannerImageUrl;
+                                LocationObject.ChannelDescription = obj.Channel[i].ChannelDescription;
                             }
                         }
                         
@@ -571,17 +571,19 @@ exports.CreateGeoLocation = function(req,res)
             }
             else
             {
-                //res.send(LocationObject);
+                
                 //console.log(LocationObject);
+                //res.send(LocationObject);
+                
                 
                 LocationObject.save(function(err,obj)
                     {
                         if(err)
                         {
-                            console.log(err);
+                            //console.log(err);
                             StatusCode = 500;
                             Message = "Internal server error";
-                            res.send({"_locationid" : err, "StatusCode" : StatusCode ,"Message" : Message});
+                            res.send({"_locationid" : '', "StatusCode" : StatusCode ,"Message" : Message});
                         }
                         else
                         {
@@ -593,7 +595,7 @@ exports.CreateGeoLocation = function(req,res)
                                 {
                                     if(!error)
                                     {
-                                        console.log('time updated');     
+                                        //console.log('time updated');     
                                     }
                                 }
                             );
