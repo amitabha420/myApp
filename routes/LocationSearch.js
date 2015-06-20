@@ -23,7 +23,47 @@ exports.GeoLocations = function(req,res)
   var distance = parseInt(input.distance);
   var coordinate = [lng,lat];
 
+  GeoLocationSchema.find(
+            {
+              loc : {
+                $near : {
+                  $geometry : { 
+                    type : "Point" , 
+                    coordinates : coordinate  
+                  }, 
+                  $maxDistance : distance
+                }
+              }
+            }
+            ,
+            {
+              
+              ChannelName : 1,
+              ChannelId : 1,
+              BannerImageUrl : 1,
+              ChannelDescription : 1,
+              LocationName : 1,
+              _id : 1,
+              UserId : 1,
+              Notification : 1,
+              'Matchpoint' : 1,
+              'loc' : 1,
+            },
+            { skip: 0, limit: limit },
+            function(err,results)
+            {
+                if(err)
+                {
+                  res.send({"result" : "", "StatusCode" : 500 ,"Message" : "Internal server error"});
+                }
+                else
+                {
+                  res.send({"result" : results , "StatusCode" : 200 ,"Message" : "OK"});
+                }
 
+            });
+        
+  /*
    async.waterfall([
         //Load user
         function(callback) {
@@ -107,7 +147,7 @@ exports.GeoLocations = function(req,res)
                   );
 
         }
-    ]);
+    ]);*/
 }
 
 

@@ -1,6 +1,7 @@
 var emailvalidator = require("email-validator");
 var async = require('async');
 var UsersCollection = require('./DbCollections.js').UsersCollection;
+var ValidateUserCollection = require('./DbCollections.js').ValidateUserCollection;
 var defaultConfig = require('../defaultConfig.json');
 
 
@@ -420,6 +421,28 @@ exports.Loggin = function (req, res) {
                         response.firstname = obj.firstName;
                         response.lastname = obj.lastName;
                         response.password = obj.password;
+
+                        /*
+                        var ValidateUser = new ValidateUserCollection();
+                        ValidateUser.UserId = obj._id;
+                        ValidateUser.save(function(err1,result1)
+                        {
+                            if(err1)
+                            {
+                                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
+                            }
+                            else
+                            {
+                                console.log(result1._id);
+                                var defaultConfig = require('../defaultConfig.json');
+                               // var expires = moment().add(8,'hours').valueOf();
+                                var ApiKey = jwt.encode({
+                                  iss: result1._id
+                                }, defaultConfig.jwtTokenSecret);
+
+                                               
+                            }
+                        });*/
                     }
                     else
                     {
