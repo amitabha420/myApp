@@ -1,21 +1,35 @@
 
+/*INPUT
+	{
+		"Type" : "android"
+	}
+*/
+
 exports.getTerms_and_Conditions = function(req,res)
 {
 	var input = req.body;
 
-	var url = 'http://syncspot.net/';
+	var data = {
+		"privacyLink" : "http://syncspot.net/",
+		"termsLink" : "http://syncspot.net/"
+	};
+
+	
 	if(input.Type.toLowerCase() == 'android' )
 	{
-		url = "https://play.google.com/store/apps?hl=en";
+		data.privacyLink = "http://syncspot.net/";
+		data.termsLink = "http://syncspot.net/";
 	}
 	else if(input.Type.toLowerCase() == "ios")
 	{
-		url = "http://www.google.com/mobile/ios/";
+		data.privacyLink = "http://syncspot.net/";
+		data.termsLink = "http://syncspot.net/";
 	}
 	else if (input.Type.toLowerCase() == 'web') 
 	{
-		url = "http://www.google.com";
+		data.privacyLink = "http://syncspot.net/";
+		data.termsLink = "http://syncspot.net/";
 	}
 
-	res.status(200).send({"result": url, "StatusCode" : "200" ,"Message" : "OK"});             
+	res.status(200).send({"result": data, "StatusCode" : "200" ,"Message" : "OK"});             
 }

@@ -3,7 +3,8 @@ var async = require('async');
 var UsersCollection = require('./DbCollections.js').UsersCollection;
 var ValidateUserCollection = require('./DbCollections.js').ValidateUserCollection;
 var defaultConfig = require('../defaultConfig.json');
-
+var jwt = require('jwt-simple'); //--
+var moment = require('moment');  //--
 
 exports.Test = function(req,res)
 {
@@ -118,13 +119,41 @@ exports.Register = function (req, res)
                 User.save(function (err, obj) {
                     if (err) 
                     {
-                        console.log(err);// ...
+                        //console.log(err);// ...
                         res.status(200).send({"_id" : "" , "StatusCode" : "500",  "Message" : "Internal server error"});
                     }
                     else
                     {
-                        var responseObj = {"_id" : obj._id ,"password" : obj.password, "StatusCode" : "200", "Message" : "Congratulations! You have successfully registered with SyncSpot."};
-                        res.status(200).send(responseObj);    
+                        var ValidateUser = new ValidateUserCollection();
+                        ValidateUser.UserId = obj._id;
+                        ValidateUser.save(function(err1,result1)
+                        {
+                            if(err1)
+                            {
+                                res.status(200).send({"_id" : "" , "StatusCode" : "500",  "Message" : "Internal server error"});
+                            }
+                            else
+                            {
+                                //console.log(result1._id);
+                                var defaultConfig = require('../defaultConfig.json');
+                               // var expires = moment().add(8,'hours').valueOf();
+                                 var ApiKey = jwt.encode({
+                                  iss: result1._id
+                                  //exp: expires
+                                }, defaultConfig.jwtTokenSecret);
+
+                                var responseObj = 
+                                {
+                                    "_id" : obj._id ,
+                                    "password" : obj.password,
+                                    "ApiKey" : ApiKey,
+                                    "StatusCode" : "200", 
+                                    "Message" : "Congratulations! You have successfully registered with SyncSpot."
+                                 };
+                                res.status(200).send(responseObj);    
+                            }
+                                               
+                        });
                     }
                 });
             }
@@ -394,12 +423,9 @@ exports.Loggin = function (req, res) {
         lastname : '',
         profiletype: 'manual',
         token : '',
+        ApiKey : '',
         _id : ''
     };
-
-    async.series([
-        
-        function(callback) {
 
             UsersCollection.findOne({email: userobj.email,password : userobj.password}, function(err,obj) 
             {
@@ -407,6 +433,7 @@ exports.Loggin = function (req, res) {
                 {
                     response.StatusCode = 500;
                     response.Message = 'Internal server error';
+                    res.status(200).send(response);
                 }
                 else
                 {
@@ -422,45 +449,41 @@ exports.Loggin = function (req, res) {
                         response.lastname = obj.lastName;
                         response.password = obj.password;
 
-                        /*
+                        
                         var ValidateUser = new ValidateUserCollection();
                         ValidateUser.UserId = obj._id;
                         ValidateUser.save(function(err1,result1)
                         {
                             if(err1)
                             {
-                                res.send({"result" : "" , "StatusCode" : "500","Message" : "Internal server error"});    
+                                response.StatusCode = 500;
+                                response.Message = 'Internal server error';
+                                res.status(200).send(response);   
                             }
                             else
                             {
-                                console.log(result1._id);
+                                //console.log(result1._id);
                                 var defaultConfig = require('../defaultConfig.json');
                                // var expires = moment().add(8,'hours').valueOf();
-                                var ApiKey = jwt.encode({
+                                 response.ApiKey = jwt.encode({
                                   iss: result1._id
+                                  //exp: expires
                                 }, defaultConfig.jwtTokenSecret);
 
-                                               
+                                 res.status(200).send(response);
                             }
-                        });*/
+                                               
+                        });
                     }
                     else
                     {
                         response.StatusCode = 404;
                         response.Message = 'Invalid Login credential';
+                        res.status(200).send(response);
                     }
                 }
                 
-               callback();
-            })
-            
-        }, //1st function end
-
-        ], //end of function serize
-            function(err) { //This function gets called after the two tasks have called their "task callbacks"
-
-            res.status(200).send(response);
-        })
+            });
 }
 
 exports.getUserDetails = function(req,res)

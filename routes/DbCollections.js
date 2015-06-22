@@ -9,7 +9,8 @@ ObjectId = Schema.ObjectId;
 
 var ValidateUser = new Schema({
     "UserId" : String,//{ type: Schema.ObjectId, auto: true },
-    "CreateDate" : {type: Date, default: Date.now}
+    "CreateDate" : {type: Date, default: Date.now},
+    "Expires" :{type:Boolean,default:false}
 },{collection : 'ValidateUser'});
 
 exports.ValidateUserCollection = mongoose.model('ValidateUser', ValidateUser);
@@ -95,12 +96,15 @@ var UserSavedContentsSchema = new Schema({
     locationName : String,
     lat : String,
     lng : String,
+    contentid:String,
     contenturl :  String,
     EndingTime : String,
     StartingTime : String,
     ImageUrl : String,
     Type : String,
-    Name :String
+    Name :String,
+    ChannelId : String,
+    ChannelName:String
 },{ collection : 'UserSavedContents'});
 exports.UserSavedContentsSchema = mongoose.model('UserSavedContents',UserSavedContentsSchema);
 

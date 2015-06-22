@@ -26,47 +26,52 @@ app.use('/gcloud/syncspot/static/img',express.static("static" + "/img"));
 
 /*end static elements*/
 
+
+
+//*Mobile App API*//
+//Api Key is valid for life time, no expires time
+app.all('/syncspot/cloud/api/v1/app/*', [require('./middlewares/validateUserRequest')]);
  
 app.get('/Register', Register.Test);
-app.post('/Register', Register.Register);
-app.post('/updateRegistration',Register.updateRegistration);
-app.post('/updateRegistrationWithPassword',Register.updateRegistrationWithPassword);
-app.post('/Loggin',Register.Loggin);
-app.post('/User/getUserDetails',Register.getUserDetails);
-app.post('/User/ChangePassword',Register.changePassword);
-app.post('/User/FeedBack',UserFeedBack.Create);
-app.post('/User/getHistory',UserContentAccessHistory.getHistory);
-app.post('/User/clearHistory',UserContentAccessHistory.clearHistory);
+app.post('/syncspot/cloud/api/v1/app/Register', Register.Register);
+app.post('/syncspot/cloud/api/v1/app/updateRegistration',Register.updateRegistration);
+app.post('/syncspot/cloud/api/v1/app/updateRegistrationWithPassword',Register.updateRegistrationWithPassword);
+app.post('/syncspot/cloud/api/v1/app/Loggin',Register.Loggin);
+app.post('/syncspot/cloud/api/v1/app/User/getUserDetails',Register.getUserDetails);
+app.post('/syncspot/cloud/api/v1/app/User/ChangePassword',Register.changePassword);
+app.post('/syncspot/cloud/api/v1/app/User/FeedBack',UserFeedBack.Create);
+app.post('/syncspot/cloud/api/v1/app/User/getHistory',UserContentAccessHistory.getHistory);
+app.post('/syncspot/cloud/api/v1/app/User/clearHistory',UserContentAccessHistory.clearHistory);
 
 
-app.post('/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
-app.post('/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
-app.post('/DigitalContents/GetContents',LocationSearch.GetContents);
+app.post('/syncspot/cloud/api/v1/app/DigitalContents/GetLocationContents',LocationSearch.GetContentsOfSpecificLocation);
+app.post('/syncspot/cloud/api/v1/app/DigitalContents/GeoLocations', LocationSearch.GeoLocations);
+app.post('/syncspot/cloud/api/v1/app/DigitalContents/GetContents',LocationSearch.GetContents);
 
 
-app.post('/User/SaveContent',SaveChannelContents.SAVEChannelContent4User);
-app.post('/User/GetContent',SaveChannelContents.GetChannelContent4User);
-app.post('/User/ClearSavedSyncSpots',SaveChannelContents.ClearChannelContent4User);
+app.post('/syncspot/cloud/api/v1/app/User/SaveContent',SaveChannelContents.SAVEChannelContent4User);
+app.post('/syncspot/cloud/api/v1/app/User/GetContent',SaveChannelContents.GetChannelContent4User);
+app.post('/syncspot/cloud/api/v1/app/User/ClearSavedSyncSpots',SaveChannelContents.ClearChannelContent4User);
 
 
-app.post('/Statistics/WriteAccess',Statistics.EnlistContentAccess);
-app.post('/Statistics/GetContentAccessFrequencyByeDays', Statistics.GetContentAccessFrequencyByeDays);
-app.post('/Statistics/GetUserContentAccessFrequencyDetails', Statistics.GetUserContentAccessFrequencyDetails);
+app.post('/syncspot/cloud/api/v1/app/Statistics/WriteAccess',Statistics.EnlistContentAccess);
+app.post('/syncspot/cloud/api/v1/app/Statistics/GetContentAccessFrequencyByeDays', Statistics.GetContentAccessFrequencyByeDays);
+app.post('/syncspot/cloud/api/v1/app/Statistics/GetUserContentAccessFrequencyDetails', Statistics.GetUserContentAccessFrequencyDetails);
 
-app.post('/Statistics/SetUserInSyncSpot', Statistics.SetUserInSyncSpot);
-app.post('/Statistics/SetUserOutSyncSpot',Statistics.SetUserOutSyncSpot);
-app.post('/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotStatisticsBetweenDate);
+app.post('/syncspot/cloud/api/v1/app/Statistics/SetUserInSyncSpot', Statistics.SetUserInSyncSpot);
+app.post('/syncspot/cloud/api/v1/app/Statistics/SetUserOutSyncSpot',Statistics.SetUserOutSyncSpot);
+app.post('/syncspot/cloud/api/v1/app/Statistics/GetSyncSpotStatisticsBetweenDate',Statistics.GetSyncSpotStatisticsBetweenDate);
 
 //app.get('/Statistics/callstoredFunction', Statistics.callstoredFunction);
-app.post('/Statistics/lockContent', Statistics.lockContent);
-app.post('/Policy',Policy.getTerms_and_Conditions);
+app.post('/syncspot/cloud/api/v1/app/Statistics/lockContent', Statistics.lockContent);
+app.post('/syncspot/cloud/api/v1/app/Policy',Policy.getTerms_and_Conditions);
 
 
 
-
+/*WebCMS API*/
 //A token is valid is upto 8 hours
 app.all('/syncspot/cloud/api/v1/webcms/*', [require('./middlewares/validateAdminRequest')]);
-/*WebCMS API*/
+
 app.post('/syncspot/cloud/api/v1/webcms/CreateAdminUsers',WebCMS.CreateAdminUsres);
 app.post('/syncspot/cloud/api/v1/webcms/UpdateAdminUsres',WebCMS.UpdateAdminUsres);
 app.post('/syncspot/cloud/api/v1/webcms/GetChannelAdminByID',WebCMS.GetChannelAdminByID);

@@ -10,6 +10,7 @@ exports.SAVEChannelContent4User = function(req,res)
     contentobj.userid = input.userid;
     contentobj.locationid= input.locationid;
     contentobj.contenturl = input.contenturl;
+    contentobj.contentid = input.contentid;
     contentobj.locationName = input.locationName;
     contentobj.lat = input.lat;
     contentobj.lng = input.lng;
@@ -18,7 +19,10 @@ exports.SAVEChannelContent4User = function(req,res)
     contentobj.ImageUrl = input.ImageUrl;
     contentobj.Type = input.Type;
     contentobj.Name = input.Name;
+    contentobj.ChannelId = input.ChannelId;
+    contentobj.ChannelName = input.ChannelName;
 
+    //console.log(input.contentid);
     //var target1 = "http:\/\/storage.googleapis.com\/0syncspotteam-bucket01\/Vdieo_635605735016179351.mp4";
     //var target = target1.replace('s', '');
     //console.log(contentobj.contenturl);
@@ -56,20 +60,35 @@ exports.GetChannelContent4User = function(req,res)
     var input = req.body;
 
     UserSavedContentsSchema.aggregate([
-     { $match : { userid : input.userid }},
-     { $group : {_id :{lat : "$lat", lng : "$lng", locationName : "$locationName" ,locationid : "$locationid" },
+     { 
+        $match : { userid : input.userid }
+     },
+     { $group : 
+        {
+            _id :
+                {
+                    lat : "$lat", 
+                    lng : "$lng", 
+                    locationName : "$locationName",
+                    locationid : "$locationid",
+                    ChannelId:"$ChannelId" ,
+                    ChannelName:"$ChannelName"
+                },
+       
                     "content" : {"$push" : 
                                     {
-                                        "contentid" : "$_id",
+                                        "contentid" : "$contentid",
                                         "contenturl" : "$contenturl",
                                         "Type" : "$Type",
                                         "StartingTime" : "$StartingTime",
                                         "EndingTime" : "$EndingTime",
                                         "ImageUrl" :  "$ImageUrl",
-                                        "Name" : "$Name"
+                                        "Name" : "$Name",
+
                                     }
                                 }
-                    }},
+        }
+    },
     { $project : 
         {
             Content : "$content",
@@ -77,6 +96,8 @@ exports.GetChannelContent4User = function(req,res)
             lan:"$_id.lng",
             locationName:"$_id.locationName",
             locationid:"$_id.locationid",
+            ChannelId:"$_id.ChannelId" ,
+            ChannelName:"$_id.ChannelName",
             _id:0
         }
     },
